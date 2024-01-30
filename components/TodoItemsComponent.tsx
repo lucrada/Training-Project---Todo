@@ -2,13 +2,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import VerticalSpacer from '../utils/VerticalSpacer';
+import dummyTodo from '../data/DUMMY_TODO';
 
 const TodoItem = (props): React.JSX.Element => {
     return (
         <View style={styles.todoItem}>
             <View style={styles.todoItemDetail}>
                 <View style={styles.todoItemBullet} />
-                <Text style={styles.todoItemText}>{props.task}</Text>
+                <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
             </View>
             <View style={styles.todoItemActions}>
                 <TouchableOpacity><View style={styles.action1} /></TouchableOpacity>
@@ -19,18 +20,16 @@ const TodoItem = (props): React.JSX.Element => {
 };
 
 const TodoItemsComponent = (): React.JSX.Element => {
+    const [todoList, setTodoList] = React.useState([]);
+
+    React.useEffect(() => setTodoList(dummyTodo), []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.categoryTitle}>Today's Task</Text>
             <VerticalSpacer amount={15} />
             <ScrollView style={styles.list}>
-                <TodoItem task="Go to bed" />
-                <TodoItem task="Play football" />
-                <TodoItem task="Watch a movie" />
-                <TodoItem task="Play video games" />
-                <TodoItem task="Go to college" />
-                <TodoItem task="Go to grocery store" />
-                <TodoItem task="Gym" />
+                {todoList.map(item => <TodoItem key={item.id} {...item} />)}
             </ScrollView>
             <VerticalSpacer amount={15} />
             <TouchableOpacity><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>

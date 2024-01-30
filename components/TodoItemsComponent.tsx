@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import VerticalSpacer from '../utils/VerticalSpacer';
-import { fetchTodoListFromCategory, fetchCategoryNameFromCategoryId } from '../utils/UtilFunctions';
+import { fetchTodoListFromCategoryId, fetchCategoryNameFromCategoryId } from '../utils/UtilFunctions';
 
 const TodoItem = (props): React.JSX.Element => {
     return (
@@ -25,7 +25,7 @@ const TodoItemsComponent = (): React.JSX.Element => {
     const [categoryName, setCategoryName] = React.useState('');
 
     React.useEffect(() => {
-        setTodoList(fetchTodoListFromCategory(categoryId));
+        setTodoList(fetchTodoListFromCategoryId(categoryId));
         setCategoryName(fetchCategoryNameFromCategoryId(categoryId));
     }, [categoryId]);
 

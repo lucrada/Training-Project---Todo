@@ -2,7 +2,7 @@
 import dummyTodo from '../data/DUMMY_TODO';
 import dummyCategory from '../data/DUMMY_CATEGORY';
 
-const fetchTodoListFromCategory = (categoryId) => {
+const fetchTodoListFromCategoryId = (categoryId) => {
     let todoList = [];
     dummyTodo.forEach(todo => todo.category_id === categoryId && todoList.push(todo));
     return todoList;
@@ -16,4 +16,4 @@ const fetchCategoryNameFromCategoryId = (categoryId) => {
     return name;
 };
 
-export { fetchTodoListFromCategory, fetchCategoryNameFromCategoryId };
+export { fetchTodoListFromCategoryId, fetchCategoryNameFromCategoryId };

@@ -1,14 +1,37 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import VerticalSpacer from '../utils/VerticalSpacer';
+
+const TodoItem = (props): React.JSX.Element => {
+    return (
+        <View style={styles.todoItem}>
+            <View style={styles.todoItemDetail}>
+                <View style={styles.todoItemBullet} />
+                <Text style={styles.todoItemText}>{props.task}</Text>
+            </View>
+            <View style={styles.todoItemActions}>
+                <TouchableOpacity><View style={styles.action1} /></TouchableOpacity>
+                <TouchableOpacity><View style={styles.action2} /></TouchableOpacity>
+            </View>
+        </View>
+    );
+};
 
 const TodoItemsComponent = (): React.JSX.Element => {
     return (
         <View style={styles.container}>
             <Text style={styles.categoryTitle}>Today's Task</Text>
             <VerticalSpacer amount={15} />
-            <View style={styles.list}></View>
+            <ScrollView style={styles.list}>
+                <TodoItem task="Go to bed" />
+                <TodoItem task="Play football" />
+                <TodoItem task="Watch a movie" />
+                <TodoItem task="Play video games" />
+                <TodoItem task="Go to college" />
+                <TodoItem task="Go to grocery store" />
+                <TodoItem task="Gym" />
+            </ScrollView>
             <VerticalSpacer amount={15} />
             <TouchableOpacity><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>
         </View>
@@ -20,11 +43,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#fff',
-        width: 362,
+        width: (Dimensions.get('window').width * 100) / 100,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        marginLeft: -20,
-        padding: 30,
+        marginLeft: -(Dimensions.get('window').width * 5.5) / 100,
+        paddingVertical: 30,
+        paddingHorizontal: 15,
     },
     categoryTitle: {
         color: '#000',
@@ -43,6 +67,49 @@ const styles = StyleSheet.create({
         backgroundColor: '#9545ca',
         borderRadius: 10,
     },
+    todoItem: {
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: '#f1effa',
+        marginBottom: 10,
+        borderRadius: 10,
+    },
+    todoItemDetail: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    todoItemBullet: {
+        marginRight: 10,
+        width: 10,
+        height: 10,
+        borderRadius: 50,
+        backgroundColor: '#9545ca',
+    },
+    todoItemText: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    todoItemActions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    action1: {
+        width: 15,
+        height: 15,
+        marginRight: 10,
+        backgroundColor: '#3dc2a5',
+        borderRadius: 10,
+    },
+    action2: {
+        width: 15,
+        height: 15,
+        backgroundColor: '#ff3461',
+        borderRadius: 10,
+    },
+
 });
 
 export default TodoItemsComponent;

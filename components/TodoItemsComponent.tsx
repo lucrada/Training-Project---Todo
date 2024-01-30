@@ -12,7 +12,7 @@ const TodoItem = (props): React.JSX.Element => {
                 <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
             </View>
             <View style={styles.todoItemActions}>
-                <TouchableOpacity><View style={styles.action1} /></TouchableOpacity>
+                <TouchableOpacity><View style={{...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5'}} /></TouchableOpacity>
                 <TouchableOpacity><View style={styles.action2} /></TouchableOpacity>
             </View>
         </View>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         width: 10,
         height: 10,
-        borderRadius: 50,
+        borderRadius: 3,
         backgroundColor: '#9545ca',
     },
     todoItemText: {
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
         marginRight: 10,
-        backgroundColor: '#3dc2a5',
         borderRadius: 10,
     },
     action2: {

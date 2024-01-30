@@ -8,7 +8,7 @@ const CategoryItem = (props): React.JSX.Element => {
             <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
                 <Text style={styles.categoryTitle}>{props.title}</Text>
                 <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
-                <TouchableOpacity><Text style={{fontSize: 40, fontWeight: 'bold',}}>+</Text></TouchableOpacity>
+                <TouchableOpacity style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30}}>+</Text></TouchableOpacity>
             </View>
         </TouchableOpacity>
     );

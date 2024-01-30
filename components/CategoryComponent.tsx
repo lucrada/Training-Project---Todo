@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { fetchCategoryItems } from '../utils/UtilFunctions';
 
 const CategoryItem = (props): React.JSX.Element => {
     return (
@@ -25,15 +26,18 @@ const AddCategoryItem = (props): React.JSX.Element => {
 };
 
 const CategoryComponent = (): React.JSX.Element => {
+    const [categoryItems, setCategoryItems] = React.useState([]);
+
+    React.useEffect(() => {
+        setCategoryItems(fetchCategoryItems());
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Category</Text>
             <ScrollView horizontal={true}>
                 <AddCategoryItem />
-                <CategoryItem title="Design" pending={3} color="#ff3461" />
-                <CategoryItem title="Learning" pending={5} color="#077ffc" />
-                <CategoryItem title="Meeting" pending={2} color="#fead28" />
-                <CategoryItem title="Today" pending={12} color="#3dc2a5" />
+                {categoryItems.map(category => <CategoryItem key={category.id} {...category}/>)}
             </ScrollView>
         </View>
     );

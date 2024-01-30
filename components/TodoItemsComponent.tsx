@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import VerticalSpacer from '../utils/VerticalSpacer';
-import dummyTodo from '../data/DUMMY_TODO';
+import { fetchTodoListFromCategory, fetchCategoryNameFromCategoryId } from '../utils/UtilFunctions';
 
 const TodoItem = (props): React.JSX.Element => {
     return (
@@ -21,12 +21,17 @@ const TodoItem = (props): React.JSX.Element => {
 
 const TodoItemsComponent = (): React.JSX.Element => {
     const [todoList, setTodoList] = React.useState([]);
+    const [categoryId, setCategoryId] = React.useState(1);
+    const [categoryName, setCategoryName] = React.useState('');
 
-    React.useEffect(() => setTodoList(dummyTodo), []);
+    React.useEffect(() => {
+        setTodoList(fetchTodoListFromCategory(categoryId));
+        setCategoryName(fetchCategoryNameFromCategoryId(categoryId));
+    }, [categoryId]);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.categoryTitle}>Today's Task</Text>
+            <Text style={styles.categoryTitle}>{categoryName}</Text>
             <VerticalSpacer amount={15} />
             <ScrollView style={styles.list}>
                 {todoList.map(item => <TodoItem key={item.id} {...item} />)}

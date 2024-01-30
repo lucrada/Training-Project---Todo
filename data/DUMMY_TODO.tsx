@@ -7,6 +7,10 @@ const dummyTodo = [
     { id: 5, category_id: 3, task: 'Go to college', finished: false},
     { id: 6, category_id: 4, task: 'Go to grocery store', finished: true},
     { id: 7, category_id: 4, task: 'Gym', finished: false},
+    { id: 8, category_id: 1, task: 'Play rugby', finished: false},
+    { id: 9, category_id: 1, task: 'Go for swimming', finished: true},
+    { id: 10, category_id: 1, task: 'Play cricket', finished: true},
+    { id: 11, category_id: 1, task: 'Play volleyball', finished: false},
 ];
 
 export default dummyTodo;

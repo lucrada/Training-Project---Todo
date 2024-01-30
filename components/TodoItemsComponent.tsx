@@ -20,8 +20,8 @@ const TodoItem = (props): React.JSX.Element => {
 };
 
 const TodoItemsComponent = (): React.JSX.Element => {
-    const [todoList, setTodoList] = React.useState([]);
     const [categoryId, setCategoryId] = React.useState(1);
+    const [todoList, setTodoList] = React.useState([]);
     const [categoryName, setCategoryName] = React.useState('');
 
     React.useEffect(() => {

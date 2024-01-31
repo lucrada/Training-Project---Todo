@@ -5,7 +5,7 @@ import { fetchCategoryItems } from '../utils/UtilFunctions';
 
 const CategoryItem = (props): React.JSX.Element => {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.handlePress}>
             <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
                 <Text style={styles.categoryTitle}>{props.title}</Text>
                 <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
@@ -25,7 +25,7 @@ const AddCategoryItem = (props): React.JSX.Element => {
     );
 };
 
-const CategoryComponent = (): React.JSX.Element => {
+const CategoryComponent = (props): React.JSX.Element => {
     const [categoryItems, setCategoryItems] = React.useState([]);
 
     React.useEffect(() => {
@@ -37,7 +37,7 @@ const CategoryComponent = (): React.JSX.Element => {
             <Text style={styles.title}>Category</Text>
             <ScrollView horizontal={true}>
                 <AddCategoryItem />
-                {categoryItems.map(category => <CategoryItem key={category.id} {...category}/>)}
+                {categoryItems.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} />)}
             </ScrollView>
         </View>
     );

@@ -12,8 +12,8 @@ const TodoItem = (props): React.JSX.Element => {
                 <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
             </View>
             <View style={styles.todoItemActions}>
-                <TouchableOpacity><View style={{...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5'}} /></TouchableOpacity>
-                <TouchableOpacity><View style={styles.action2} /></TouchableOpacity>
+                <TouchableOpacity onPress={props.finished ? props.undoFinishTask : props.finishTask}><View style={{...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5'}} /></TouchableOpacity>
+                <TouchableOpacity onPress={props.deleteTask}><View style={styles.action2} /></TouchableOpacity>
             </View>
         </View>
     );
@@ -28,12 +28,45 @@ const TodoItemsComponent = (props): React.JSX.Element => {
         setCategoryName(fetchCategoryNameFromCategoryId(props.categoryId));
     }, [props.categoryId]);
 
+    const finishTask = (id) => {
+        setTodoList(prevTodoList => {
+            return prevTodoList.map(item => {
+                if (item.id === id) {
+                    return { ...item, finished: true };
+                }
+                return item;
+            });
+        });
+    };
+
+    const undoFinishTask = (id) => {
+        setTodoList(prevTodoList => {
+            return prevTodoList.map(item => {
+                if (item.id === id) {
+                    return { ...item, finished: false };
+                }
+                return item;
+            });
+        });
+    };
+
+    const deleteTask = (id) => {
+        setTodoList(prevTodoList => {
+            return prevTodoList.map(item => {
+                if (item.id === id) {
+                    return { ...item, deleted: true };
+                }
+                return item;
+            });
+        });
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.categoryTitle}>{categoryName}</Text>
             <VerticalSpacer amount={15} />
             <ScrollView style={styles.list}>
-                {todoList.map(item => <TodoItem key={item.id} {...item} />)}
+                {todoList.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => finishTask(item.id)} undoFinishTask={() => undoFinishTask(item.id)} deleteTask={() => deleteTask(item.id)} />)}
             </ScrollView>
             <VerticalSpacer amount={15} />
             <TouchableOpacity><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>

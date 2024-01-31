@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { fetchCategoryItems } from '../utils/UtilFunctions';
 
 const CategoryItem = (props): React.JSX.Element => {
     return (
@@ -9,7 +8,7 @@ const CategoryItem = (props): React.JSX.Element => {
             <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
                 <Text style={styles.categoryTitle}>{props.title}</Text>
                 <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
-                <TouchableOpacity style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30}}>+</Text></TouchableOpacity>
+                <TouchableOpacity style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30, }}>+</Text></TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
@@ -26,18 +25,12 @@ const AddCategoryItem = (props): React.JSX.Element => {
 };
 
 const CategoryComponent = (props): React.JSX.Element => {
-    const [categoryItems, setCategoryItems] = React.useState([]);
-
-    React.useEffect(() => {
-        setCategoryItems(fetchCategoryItems());
-    }, []);
-
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Category</Text>
             <ScrollView horizontal={true}>
                 <AddCategoryItem />
-                {categoryItems.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} />)}
+                {props.items.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} />)}
             </ScrollView>
         </View>
     );
@@ -55,7 +48,7 @@ const styles = StyleSheet.create({
     },
     categoryContainer: {
         flexDirection: 'column',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-around',
         width: 120,
         height: 150,
         borderRadius: 10,

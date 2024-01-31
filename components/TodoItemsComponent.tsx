@@ -2,7 +2,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import VerticalSpacer from '../utils/VerticalSpacer';
-import { fetchTodoListFromCategoryId, fetchCategoryNameFromCategoryId } from '../utils/UtilFunctions';
 
 const TodoItem = (props): React.JSX.Element => {
     return (
@@ -20,53 +19,12 @@ const TodoItem = (props): React.JSX.Element => {
 };
 
 const TodoItemsComponent = (props): React.JSX.Element => {
-    const [todoList, setTodoList] = React.useState([]);
-    const [categoryName, setCategoryName] = React.useState('');
-
-    React.useEffect(() => {
-        setTodoList(fetchTodoListFromCategoryId(props.categoryId));
-        setCategoryName(fetchCategoryNameFromCategoryId(props.categoryId));
-    }, [props.categoryId]);
-
-    const finishTask = (id) => {
-        setTodoList(prevTodoList => {
-            return prevTodoList.map(item => {
-                if (item.id === id) {
-                    return { ...item, finished: true };
-                }
-                return item;
-            });
-        });
-    };
-
-    const undoFinishTask = (id) => {
-        setTodoList(prevTodoList => {
-            return prevTodoList.map(item => {
-                if (item.id === id) {
-                    return { ...item, finished: false };
-                }
-                return item;
-            });
-        });
-    };
-
-    const deleteTask = (id) => {
-        setTodoList(prevTodoList => {
-            return prevTodoList.map(item => {
-                if (item.id === id) {
-                    return { ...item, deleted: true };
-                }
-                return item;
-            });
-        });
-    };
-
     return (
         <View style={styles.container}>
-            <Text style={styles.categoryTitle}>{categoryName}</Text>
+            <Text style={styles.categoryTitle}>{props.categoryName}</Text>
             <VerticalSpacer amount={15} />
             <ScrollView style={styles.list}>
-                {todoList.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => finishTask(item.id)} undoFinishTask={() => undoFinishTask(item.id)} deleteTask={() => deleteTask(item.id)} />)}
+                {props.items.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => props.finishTask(item.id)} undoFinishTask={() => props.undoFinishTask(item.id)} deleteTask={() => props.deleteTask(item.id)} />)}
             </ScrollView>
             <VerticalSpacer amount={15} />
             <TouchableOpacity><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>

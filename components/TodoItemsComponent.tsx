@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import VerticalSpacer from '../utils/VerticalSpacer';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Modal } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { TextInput } from 'react-native-gesture-handler';
+import AddTodoModal from './AddTodoModal';
 
 const TodoItem = (props): React.JSX.Element => {
     return (
@@ -19,6 +22,20 @@ const TodoItem = (props): React.JSX.Element => {
 };
 
 const TodoItemsComponent = (props): React.JSX.Element => {
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [newTodoItem, setNewTodoItem] = React.useState('');
+
+    const openModal = () => setModalVisible(true);
+    const closeModal = () => setModalVisible(false);
+    const handleTextChange = (task) => setNewTodoItem(task);
+
+    const addNewItem = () => {
+        if (newTodoItem === '') return;
+        let newTodo = { id: 10, category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
+        props.addTodoFunc(newTodo);
+        closeModal();
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.categoryTitle}>{props.categoryName}</Text>
@@ -27,7 +44,8 @@ const TodoItemsComponent = (props): React.JSX.Element => {
                 {props.items.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => props.finishTask(item.id)} undoFinishTask={() => props.undoFinishTask(item.id)} deleteTask={() => props.deleteTask(item.id)} />)}
             </ScrollView>
             <VerticalSpacer amount={15} />
-            <TouchableOpacity><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>
+            <TouchableOpacity onPress={openModal}><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>
+            <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
         </View>
     );
 };
@@ -102,7 +120,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff3461',
         borderRadius: 10,
     },
-
 });
 
 export default TodoItemsComponent;

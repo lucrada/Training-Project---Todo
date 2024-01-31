@@ -6,7 +6,7 @@ import styles from './Style';
 const AddTodoScreen = () : React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <Text style={styles.mainText}>Todo Screen</Text>
+      <Text style={styles.mainText}>Add todo item</Text>
     </View>
   );
 };

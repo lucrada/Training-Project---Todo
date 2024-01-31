@@ -1,16 +1,34 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import AddTodoModal from './AddTodoModal';
 
 const CategoryItem = (props): React.JSX.Element => {
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [newTodoItem, setNewTodoItem] = React.useState('');
+
+    const openModal = () => setModalVisible(true);
+    const closeModal = () => setModalVisible(false);
+    const handleTextChange = (task) => setNewTodoItem(task);
+
+    const addNewItem = () => {
+        if (newTodoItem === '') return;
+        let newTodo = { id: Date.now().toString() + Math.random().toString(36).substring(2), category_id: props.id, task: newTodoItem, finished: false, deleted: false };
+        props.addTodoFunc(newTodo);
+        closeModal();
+    };
+
     return (
+        <View>
         <TouchableOpacity onPress={props.handlePress}>
             <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
                 <Text style={styles.categoryTitle}>{props.title}</Text>
                 <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
-                <TouchableOpacity style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30, }}>+</Text></TouchableOpacity>
+                <TouchableOpacity onPress={openModal} style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30, }}>+</Text></TouchableOpacity>
             </View>
         </TouchableOpacity>
+        <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
+        </View>
     );
 };
 
@@ -30,7 +48,7 @@ const CategoryComponent = (props): React.JSX.Element => {
             <Text style={styles.title}>Category</Text>
             <ScrollView horizontal={true}>
                 <AddCategoryItem />
-                {props.items.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} />)}
+                {props.items.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} addTodoFunc={props.addTodoFunc} />)}
             </ScrollView>
         </View>
     );

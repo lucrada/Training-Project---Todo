@@ -18,11 +18,15 @@ const NestedCategoryTodo = (): React.JSX.Element => {
         setCategoryName(_fetchCategoryNameFromId(categoryId));
         setTodoListWithId(_fetchTodoListFromCategoryId(categoryId));
     }, [categoryId]);
-    
+
     React.useEffect(() => {
         setCategories(_fetchUpdatedCategories());
         setTodoListWithId(_fetchTodoListFromCategoryId(categoryId));
     }, [todoList]);
+
+    const addTodoListItem = (item) => {
+        setTodoList([item, ...todoList]);
+    };
 
     const _fetchCategoryNameFromId = (id) => {
         let name = '';
@@ -47,7 +51,7 @@ const NestedCategoryTodo = (): React.JSX.Element => {
         });
 
         return categoryItems;
-    }
+    };
 
     const handleCategoryItemPress = (id) => {
         setCategoryId(id);
@@ -74,7 +78,7 @@ const NestedCategoryTodo = (): React.JSX.Element => {
             });
         });
     };
-    
+
     const deleteTask = (id) => {
         setTodoList(prevTodoList => {
             return prevTodoList.map(item => {
@@ -88,9 +92,9 @@ const NestedCategoryTodo = (): React.JSX.Element => {
 
     return (
         <View style={styles.nest_container}>
-            <CategoryComponent items={categories} handleItemPress={handleCategoryItemPress} />
+            <CategoryComponent items={categories} handleItemPress={handleCategoryItemPress} addTodoFunc={addTodoListItem} />
             <VerticalSpacer amount={40} />
-            <TodoItemsComponent categoryName={categoryName} items={todoListWithId} finishTask={finishTask} undoFinishTask={undoFinishTask} deleteTask={deleteTask} />
+            <TodoItemsComponent categoryId={categoryId} categoryName={categoryName} items={todoListWithId} finishTask={finishTask} undoFinishTask={undoFinishTask} deleteTask={deleteTask} addTodoFunc={addTodoListItem} />
         </View>
     );
 };

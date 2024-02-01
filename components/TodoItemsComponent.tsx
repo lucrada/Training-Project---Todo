@@ -9,16 +9,18 @@ const TodoItem = (props): React.JSX.Element => {
     const [opacity, setOpacity] = React.useState(new Animated.Value(0));
 
     React.useEffect(() => {
-        Animated.timing(opacity, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-        }).start();
-        Animated.timing(width, {
-            toValue: Dimensions.get('window').width * 0.915,
-            duration: 500,
-            useNativeDriver: false,
-        }).start();
+        Animated.parallel([
+            Animated.timing(opacity, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: false,
+            }),
+            Animated.timing(width, {
+                toValue: Dimensions.get('window').width * 0.915,
+                duration: 500,
+                useNativeDriver: false,
+            }),
+        ]).start();
     });
 
     return (

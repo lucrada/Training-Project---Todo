@@ -57,6 +57,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             return;
         }
         let newTodo = { id: Date.now().toString() + Math.random().toString(36).substring(2), category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
+        setNewTodoItem('');
         props.addTodoFunc(newTodo);
         closeModal();
     };

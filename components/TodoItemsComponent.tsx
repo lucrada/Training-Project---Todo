@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import VerticalSpacer from '../utils/VerticalSpacer';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Modal, Alert } from 'react-native';
 import AddTodoModal from './AddTodoModal';
 
 const TodoItem = (props): React.JSX.Element => {
@@ -28,7 +28,16 @@ const TodoItemsComponent = (props): React.JSX.Element => {
     const handleTextChange = (task) => setNewTodoItem(task);
 
     const addNewItem = () => {
-        if (newTodoItem === '') return;
+        if (newTodoItem === '') {
+            Alert.alert('Warning', 'Task cannot be empty!');
+            closeModal();
+            return;
+        }
+        if (props.categoryId === '') {
+            Alert.alert('Warning', 'Create a category first');
+            closeModal();
+            return;
+        }
         let newTodo = { id: Date.now().toString() + Math.random().toString(36).substring(2), category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
         props.addTodoFunc(newTodo);
         closeModal();
@@ -38,11 +47,14 @@ const TodoItemsComponent = (props): React.JSX.Element => {
         <View style={styles.container}>
             <Text style={styles.categoryTitle}>{props.categoryName}</Text>
             <VerticalSpacer amount={15} />
-            <ScrollView style={styles.list}>
-                {props.items.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => props.finishTask(item.id)} undoFinishTask={() => props.undoFinishTask(item.id)} deleteTask={() => props.deleteTask(item.id)} />)}
-            </ScrollView>
+            {
+                props.items.length === 0 ? <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black'}}>Your todo list appear here</Text> : 
+                <ScrollView style={styles.list}>
+                    {props.items.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => props.finishTask(item.id)} undoFinishTask={() => props.undoFinishTask(item.id)} deleteTask={() => props.deleteTask(item.id)} />)}
+                </ScrollView>
+            }
             <VerticalSpacer amount={15} />
-            <TouchableOpacity onPress={openModal}><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>
+            <TouchableOpacity style={styles.addButtonTouch} onPress={openModal}><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>
             <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
         </View>
     );
@@ -51,6 +63,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        position: 'relative',
         flexDirection: 'column',
         backgroundColor: '#fff',
         width: (Dimensions.get('window').width * 100) / 100,
@@ -68,9 +81,12 @@ const styles = StyleSheet.create({
     list: {
         height: 300,
     },
+    addButtonTouch: {
+        position: 'absolute',
+        right: 20,
+        top: 370,
+    },
     addButton: {
-        alignSelf: 'flex-end',
-        justifyContent: 'center',
         alignItems: 'center',
         width: 40,
         height: 40,

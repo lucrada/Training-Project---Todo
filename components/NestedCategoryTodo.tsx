@@ -11,7 +11,7 @@ const NestedCategoryTodo = (): React.JSX.Element => {
     const [todoList, setTodoList] = React.useState(dummyTodo);
     const [todoListWithId, setTodoListWithId] = React.useState([]);
     const [categories, setCategories] = React.useState(dummyCategory);
-    const [categoryId, setCategoryId] = React.useState(1);
+    const [categoryId, setCategoryId] = React.useState('');
     const [categoryName, setCategoryName] = React.useState('');
 
     React.useEffect(() => {

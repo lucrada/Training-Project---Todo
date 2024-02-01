@@ -59,12 +59,13 @@ const CategoryComponent = (props): React.JSX.Element => {
         let newCategory = { id: Date.now().toString() + Math.random().toString(36).substring(2), title: newCategoryItem, color: color};
         props.addCategoryItem(newCategory);
         closeModal();
+        props.handleItemPress(newCategory.id);
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Category</Text>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} style={{minHeight: 150,}}>
                 <AddCategoryItem handlePress={openModal} />
                 {props.items.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} addTodoFunc={props.addTodoFunc} />)}
             </ScrollView>

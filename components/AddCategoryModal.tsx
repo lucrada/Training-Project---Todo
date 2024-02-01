@@ -5,6 +5,38 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-gesture-handler';
 
 const AddCategoryModal = (props): React.JSX.Element => {
+    const [selected_1, setSelected_1] = React.useState(false);
+    const [selected_2, setSelected_2] = React.useState(false);
+    const [selected_3, setSelected_3] = React.useState(false);
+    const [selected_4, setSelected_4] = React.useState(false);
+
+    const resetColors = () => {
+        setSelected_1(false);
+        setSelected_2(false);
+        setSelected_3(false);
+        setSelected_4(false);
+    };
+
+    const handleColorSelection = (id, color) => {
+        props.handleColorChange(color);
+        if (id == 1) {
+            resetColors();
+            setSelected_1(true);
+        }
+        if (id == 2) {
+            resetColors();
+            setSelected_2(true);
+        }
+        if (id == 3) {
+            resetColors();
+            setSelected_3(true);
+        }
+        if (id == 4) {
+            resetColors();
+            setSelected_4(true);
+        }
+    };
+
     return (
         <Modal animationType="slide" transparent={true} visible={props.modalVisible} onRequestClose={props.closeModal}>
             <View style={styles.modalContainer}>
@@ -13,10 +45,10 @@ const AddCategoryModal = (props): React.JSX.Element => {
                     <TextInput style={styles.modalTextInput} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter category name" />
                     <Text style={styles.modalText}>Choose a color</Text>
                     <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', alignSelf: 'center', marginBottom: 20, width: Dimensions.get('window').width * 0.7}}>
-                        <TouchableOpacity onPress={() => props.handleColorChange('#ff3461')}><View style={{width: 50, height: 50, backgroundColor: '#ff3461', borderRadius: 10,}} /></TouchableOpacity>
-                        <TouchableOpacity onPress={() => props.handleColorChange('#077ffc')}><View style={{width: 50, height: 50, backgroundColor: '#077ffc', borderRadius: 10,}} /></TouchableOpacity>
-                        <TouchableOpacity onPress={() => props.handleColorChange('#fead28')}><View style={{width: 50, height: 50, backgroundColor: '#fead28', borderRadius: 10,}} /></TouchableOpacity>
-                        <TouchableOpacity onPress={() => props.handleColorChange('#3dc2a5')}><View style={{width: 50, height: 50, backgroundColor: '#3dc2a5', borderRadius: 10,}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleColorSelection(1, '#ff3461')}><View style={{width: 50, height: 50, backgroundColor: '#ff3461', borderRadius: 10, borderWidth: selected_1 ? 2: 0}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleColorSelection(2, '#077ffc')}><View style={{width: 50, height: 50, backgroundColor: '#077ffc', borderRadius: 10, borderWidth: selected_2 ? 2: 0}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleColorSelection(3, '#fead28')}><View style={{width: 50, height: 50, backgroundColor: '#fead28', borderRadius: 10, borderWidth: selected_3 ? 2: 0}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleColorSelection(4, '#3dc2a5')}><View style={{width: 50, height: 50, backgroundColor: '#3dc2a5', borderRadius: 10, borderWidth: selected_4 ? 2: 0}} /></TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity onPress={props.addItem} style={styles.modalButtonAdd}><Text style={styles.modalButtonText}>Add</Text></TouchableOpacity>

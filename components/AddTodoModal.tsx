@@ -10,7 +10,7 @@ const AddTodoModal = (props): React.JSX.Element => {
             <View style={styles.modalContainer}>
                 <SafeAreaView style={styles.modalBox}>
                     <Text style={styles.modalText}>Add todo item</Text>
-                    <TextInput style={styles.modalTextInput} value={props.newTodoItem} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter your task" />
+                    <TextInput style={styles.modalTextInput} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter your task" />
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <TouchableOpacity onPress={props.addItem} style={styles.modalButtonAdd}><Text style={styles.modalButtonText}>Add</Text></TouchableOpacity>
                         <TouchableOpacity onPress={props.closeModal} style={styles.modalButtonClose}><Text style={styles.modalButtonText}>Cancel</Text></TouchableOpacity>

@@ -10,13 +10,13 @@ const AddCategoryModal = (props): React.JSX.Element => {
             <View style={styles.modalContainer}>
                 <SafeAreaView style={styles.modalBox}>
                     <Text style={styles.modalText}>Add new category</Text>
-                    <TextInput style={styles.modalTextInput} value={props.newTodoItem} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter category name" />
+                    <TextInput style={styles.modalTextInput} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter category name" />
                     <Text style={styles.modalText}>Choose a color</Text>
                     <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', alignSelf: 'center', marginBottom: 20, width: Dimensions.get('window').width * 0.7}}>
-                        <TouchableOpacity><View style={{width: 50, height: 50, backgroundColor: '#ff3461', borderRadius: 10,}} /></TouchableOpacity>
-                        <TouchableOpacity><View style={{width: 50, height: 50, backgroundColor: '#077ffc', borderRadius: 10,}} /></TouchableOpacity>
-                        <TouchableOpacity><View style={{width: 50, height: 50, backgroundColor: '#fead28', borderRadius: 10,}} /></TouchableOpacity>
-                        <TouchableOpacity><View style={{width: 50, height: 50, backgroundColor: '#3dc2a5', borderRadius: 10,}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.handleColorChange('#ff3461')}><View style={{width: 50, height: 50, backgroundColor: '#ff3461', borderRadius: 10,}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.handleColorChange('#077ffc')}><View style={{width: 50, height: 50, backgroundColor: '#077ffc', borderRadius: 10,}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.handleColorChange('#fead28')}><View style={{width: 50, height: 50, backgroundColor: '#fead28', borderRadius: 10,}} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.handleColorChange('#3dc2a5')}><View style={{width: 50, height: 50, backgroundColor: '#3dc2a5', borderRadius: 10,}} /></TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity onPress={props.addItem} style={styles.modalButtonAdd}><Text style={styles.modalButtonText}>Add</Text></TouchableOpacity>

@@ -45,15 +45,16 @@ const AddCategoryItem = (props): React.JSX.Element => {
 
 const CategoryComponent = (props): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false);
-    const [newTodoItem, setNewTodoItem] = React.useState('');
+    const [newCategoryItem, setNewCategoryItem] = React.useState('');
+    const [color, setColor] = React.useState('');
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     const handleTextChange = (task) => setNewTodoItem(task);
 
-    const addNewItem = () => {
-        if (newTodoItem === '') return;
-        let newTodo = { id: 10, category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
+    const addNewCategoryItem = () => {
+        if (newCategoryItem === '') return;
+        let newCategory = { id: Date.now().toString() + Math.random().toString(36).substring(2), category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
         props.addTodoFunc(newTodo);
         closeModal();
     };
@@ -65,7 +66,7 @@ const CategoryComponent = (props): React.JSX.Element => {
                 <AddCategoryItem handlePress={openModal} />
                 {props.items.map(category => <CategoryItem key={category.id} {...category} handlePress={() => props.handleItemPress(category.id)} addTodoFunc={props.addTodoFunc} />)}
             </ScrollView>
-            <AddCategoryModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
+            <AddCategoryModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewCategoryItem} modalVisible={modalVisible} />
         </View>
     );
 };

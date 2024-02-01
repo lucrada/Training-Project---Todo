@@ -28,6 +28,10 @@ const NestedCategoryTodo = (): React.JSX.Element => {
         setTodoList([item, ...todoList]);
     };
 
+    const addCategoryItem = (item) => {
+        setCategories([item, ...categories]);
+    };
+
     const _fetchCategoryNameFromId = (id) => {
         let name = '';
         categories.forEach(category => {
@@ -92,7 +96,7 @@ const NestedCategoryTodo = (): React.JSX.Element => {
 
     return (
         <View style={styles.nest_container}>
-            <CategoryComponent items={categories} handleItemPress={handleCategoryItemPress} addTodoFunc={addTodoListItem} />
+            <CategoryComponent items={categories} handleItemPress={handleCategoryItemPress} addTodoFunc={addTodoListItem} addCategoryItem={addCategoryItem} />
             <VerticalSpacer amount={40} />
             <TodoItemsComponent categoryId={categoryId} categoryName={categoryName} items={todoListWithId} finishTask={finishTask} undoFinishTask={undoFinishTask} deleteTask={deleteTask} addTodoFunc={addTodoListItem} />
         </View>

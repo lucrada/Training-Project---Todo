@@ -2,8 +2,6 @@
 import React from 'react';
 import VerticalSpacer from '../utils/VerticalSpacer';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TextInput } from 'react-native-gesture-handler';
 import AddTodoModal from './AddTodoModal';
 
 const TodoItem = (props): React.JSX.Element => {
@@ -31,7 +29,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
 
     const addNewItem = () => {
         if (newTodoItem === '') return;
-        let newTodo = { id: 10, category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
+        let newTodo = { id: Date.now().toString() + Math.random().toString(36).substring(2), category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
         props.addTodoFunc(newTodo);
         closeModal();
     };

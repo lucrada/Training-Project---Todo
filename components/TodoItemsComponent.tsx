@@ -10,7 +10,7 @@ const TodoItem = (props): React.JSX.Element => {
 
     React.useEffect(() => {
         Animated.timing(opacity, {
-            toValue: 500,
+            toValue: 1,
             duration: 500,
             useNativeDriver: false,
         }).start();

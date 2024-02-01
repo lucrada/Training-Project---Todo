@@ -1,12 +1,28 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import VerticalSpacer from '../utils/VerticalSpacer';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Modal, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert, Animated } from 'react-native';
 import AddTodoModal from './AddTodoModal';
 
 const TodoItem = (props): React.JSX.Element => {
+    const [width, setWidth] = React.useState(new Animated.Value(0));
+    const [opacity, setOpacity] = React.useState(new Animated.Value(0));
+
+    React.useEffect(() => {
+        Animated.timing(opacity, {
+            toValue: 500,
+            duration: 100,
+            useNativeDriver: false,
+        }).start();
+        Animated.timing(width, {
+            toValue: Dimensions.get('window').width * 0.915,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+    });
+
     return (
-        <View style={styles.todoItem}>
+        <Animated.View style={{...styles.todoItem, width: width, opacity: opacity}}>
             <View style={styles.todoItemDetail}>
                 <View style={styles.todoItemBullet} />
                 <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
@@ -15,7 +31,7 @@ const TodoItem = (props): React.JSX.Element => {
                 <TouchableOpacity onPress={props.finished ? props.undoFinishTask : props.finishTask}><View style={{...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5'}} /></TouchableOpacity>
                 <TouchableOpacity onPress={props.deleteTask}><View style={styles.action2} /></TouchableOpacity>
             </View>
-        </View>
+        </Animated.View>
     );
 };
 

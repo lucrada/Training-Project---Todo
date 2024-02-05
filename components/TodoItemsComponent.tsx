@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
     },
     addButtonTouch: {
         position: 'absolute',
-        right: 20,
-        top: 370,
+        right: Dimensions.get('window').width * 0.05,
+        top: Dimensions.get('window').height * 0.45,
     },
     addButton: {
         alignItems: 'center',

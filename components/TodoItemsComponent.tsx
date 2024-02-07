@@ -5,8 +5,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert
 import AddTodoModal from './AddTodoModal';
 
 const TodoItem = (props): React.JSX.Element => {
-    const [width, setWidth] = React.useState(new Animated.Value(0));
-    const [opacity, setOpacity] = React.useState(new Animated.Value(0));
+    const width = React.useState(new Animated.Value(0))[0];
+    const opacity = React.useState(new Animated.Value(0))[0];
 
     React.useEffect(() => {
         Animated.parallel([

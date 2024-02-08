@@ -86,7 +86,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
 
     const deleteTask = (itemId) => {
         dispatch(deleteTodo(itemId));
-        dispatch(decrementPendingTask(categoryId));
+        todos.map(item => item.id === itemId && !item.finished && dispatch(decrementPendingTask(categoryId)));
     };
 
     return (

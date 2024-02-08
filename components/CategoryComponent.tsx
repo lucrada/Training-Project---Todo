@@ -1,27 +1,33 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AddTodoModal from './AddTodoModal';
 import AddCategoryModal from './AddCategoryModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
-import { addCategory, selectCategory } from '../reducers/categorySlice';
+import { addCategory, incrementPendingTask, selectCategory } from '../reducers/categorySlice';
+import { addTodo } from '../reducers/todoSlice';
 
 const CategoryItem = (props): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [newTodoItem, setNewTodoItem] = React.useState('');
 
     const dispatch = useDispatch();
-    const selectedCategory = useSelector(state => state.selectedCategory);
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     const handleTextChange = (task) => setNewTodoItem(task);
 
     const addNewItem = () => {
-        if (newTodoItem === '') return;
-        let newTodo = { id: nanoid(), category_id: selectedCategory.id, task: newTodoItem, finished: false};
-        dispatch(addCategory(newTodo));
+        if (newTodoItem === '') {
+            Alert.alert('Warning', 'Task cannot be empty');
+            closeModal();
+            return;
+        }
+        let newTodo = { id: nanoid(), category_id: props.id, task: newTodoItem, finished: false };
+        dispatch(addTodo(newTodo));
+        dispatch(selectCategory(newTodo.category_id));
+        dispatch(incrementPendingTask(newTodo.category_id));
         closeModal();
     };
 
@@ -30,7 +36,7 @@ const CategoryItem = (props): React.JSX.Element => {
         <TouchableOpacity onPress={() => dispatch(selectCategory(props.id))}>
             <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
                 <Text style={styles.categoryTitle}>{props.title}</Text>
-                <Text style={styles.categoryPending}>{props.pending ? props.pending : 0} pending tasks</Text>
+                <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
                 <TouchableOpacity onPress={openModal} style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30, }}>+</Text></TouchableOpacity>
             </View>
         </TouchableOpacity>
@@ -59,13 +65,14 @@ const CategoryComponent = (props): React.JSX.Element => {
     const handleTextChange = (task) => setNewCategoryItem(task);
     const handleColorSelect = (color) => setColor(color);
 
-    const items = useSelector(state => state.categories);
+    const categoryState = useSelector(state => state.category);
+    const items = categoryState.categories;
     const dispatch = useDispatch();
 
     const addNewCategoryItem = () => {
         if (newCategoryItem === '') return;
         if (color === '') return; 
-        let newCategory = { id: nanoid(), title: newCategoryItem, color: color};
+        let newCategory = { id: nanoid(), title: newCategoryItem, color: color, pending: 0};
         dispatch(addCategory(newCategory));
         dispatch(selectCategory(newCategory.id));
         closeModal();

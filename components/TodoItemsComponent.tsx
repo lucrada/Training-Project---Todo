@@ -3,6 +3,10 @@ import React from 'react';
 import VerticalSpacer from '../utils/VerticalSpacer';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert, Animated } from 'react-native';
 import AddTodoModal from './AddTodoModal';
+import { nanoid } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTodo, toggleStatus, deleteTodo } from '../reducers/todoSlice';
+import { decrementPendingTask, incrementPendingTask, selectCategory } from '../reducers/categorySlice';
 
 const TodoItem = (props): React.JSX.Element => {
     const width = React.useState(new Animated.Value(0))[0];
@@ -41,6 +45,13 @@ const TodoItemsComponent = (props): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [newTodoItem, setNewTodoItem] = React.useState('');
 
+    const dispatch = useDispatch();
+    const todoState = useSelector(state => state.todo);
+    const todos = todoState.todos;
+    const categoryState = useSelector(state => state.category);
+    const categoryTitle = categoryState.selectedCategory.title;
+    const categoryId = categoryState.selectedCategory.id;
+
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     const handleTextChange = (task) => setNewTodoItem(task);
@@ -51,25 +62,41 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             closeModal();
             return;
         }
-        if (props.categoryId === '') {
+        if (categoryId === 0) {
             Alert.alert('Warning', 'Create a category first');
             closeModal();
             return;
         }
-        let newTodo = { id: Date.now().toString() + Math.random().toString(36).substring(2), category_id: props.categoryId, task: newTodoItem, finished: false, deleted: false };
+        let newTodo = { id: nanoid(), category_id: categoryId, task: newTodoItem, finished: false};
         setNewTodoItem('');
-        props.addTodoFunc(newTodo);
+        dispatch(addTodo(newTodo));
+        dispatch(incrementPendingTask(categoryId));
         closeModal();
+    };
+
+    const finishTask = (itemId) => {
+        dispatch(toggleStatus(itemId));
+        dispatch(decrementPendingTask(categoryId));
+    };
+
+    const undoFinishTask = (itemId) => {
+        dispatch(toggleStatus(itemId));
+        dispatch(incrementPendingTask(categoryId));
+    };
+
+    const deleteTask = (itemId) => {
+        dispatch(deleteTodo(itemId));
+        dispatch(decrementPendingTask(categoryId));
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.categoryTitle}>{props.categoryName}</Text>
+            <Text style={styles.categoryTitle}>{categoryTitle}</Text>
             <VerticalSpacer amount={15} />
             {
-                props.items.length === 0 ? <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black'}}>Your todo list appear here</Text> : 
+                todos.length === 0 ? <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black'}}>Your todo list appear here</Text> : 
                 <ScrollView style={styles.list}>
-                    {props.items.map(item => !item.deleted && <TodoItem key={item.id} {...item} finishTask={() => props.finishTask(item.id)} undoFinishTask={() => props.undoFinishTask(item.id)} deleteTask={() => props.deleteTask(item.id)} />)}
+                        {todos.map(item => item.category_id === categoryId && <TodoItem key={item.id} {...item} finishTask={() => finishTask(item.id)} undoFinishTask={() => undoFinishTask(item.id)} deleteTask={() => deleteTask(item.id)} />)}
                 </ScrollView>
             }
             <VerticalSpacer amount={15} />

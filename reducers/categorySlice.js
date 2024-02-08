@@ -18,7 +18,7 @@ const categorySlice = createSlice({
         },
         selectCategory: (state, action) => {
             state.selectedCategory.id = action.payload;
-            let category = state.categories.filter(item => item.id === action.payload);
+            let category = state.categories.filter(item => item.id === action.payload)[0];
             state.selectedCategory.title = category.title;
         },
         incrementPendingTask: (state, action) => {
@@ -31,4 +31,4 @@ const categorySlice = createSlice({
 });
 
 export const { addCategory, selectCategory, incrementPendingTask, decrementPendingTask } = categorySlice.actions;
-export default categorySlice.reducers;
+export default categorySlice.reducer;

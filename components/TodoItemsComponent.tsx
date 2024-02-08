@@ -6,7 +6,10 @@ import AddTodoModal from './AddTodoModal';
 import { nanoid } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, toggleStatus, deleteTodo } from '../reducers/todoSlice';
-import { decrementPendingTask, incrementPendingTask, selectCategory } from '../reducers/categorySlice';
+import { decrementPendingTask, incrementPendingTask } from '../reducers/categorySlice';
+
+const WINDOW_WIDTH = Dimensions.get('window').width;
+const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 const TodoItem = (props): React.JSX.Element => {
     const width = React.useState(new Animated.Value(0))[0];
@@ -20,7 +23,7 @@ const TodoItem = (props): React.JSX.Element => {
                 useNativeDriver: false,
             }),
             Animated.timing(width, {
-                toValue: Dimensions.get('window').width * 0.915,
+                toValue: WINDOW_WIDTH * 0.915,
                 duration: 500,
                 useNativeDriver: false,
             }),
@@ -112,10 +115,10 @@ const styles = StyleSheet.create({
         position: 'relative',
         flexDirection: 'column',
         backgroundColor: '#fff',
-        width: (Dimensions.get('window').width * 100) / 100,
+        width: (WINDOW_WIDTH * 100) / 100,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        marginLeft: -(Dimensions.get('window').width * 5.5) / 100,
+        marginLeft: -(WINDOW_WIDTH * 5.5) / 100,
         paddingVertical: 30,
         paddingHorizontal: 15,
     },
@@ -129,8 +132,8 @@ const styles = StyleSheet.create({
     },
     addButtonTouch: {
         position: 'absolute',
-        right: Dimensions.get('window').width * 0.05,
-        top: Dimensions.get('window').height * 0.45,
+        right: WINDOW_WIDTH * 0.05,
+        top: WINDOW_HEIGHT * 0.45,
     },
     addButton: {
         alignItems: 'center',

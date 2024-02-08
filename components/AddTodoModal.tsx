@@ -4,6 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-gesture-handler';
 
+const WINDOW_WIDTH = Dimensions.get('window').width;
+
 const AddTodoModal = (props): React.JSX.Element => {
     return (
         <Modal animationType="slide" transparent={true} visible={props.modalVisible} onRequestClose={props.closeModal}>
@@ -32,9 +34,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         padding: 10,
         backgroundColor: '#fff',
-        width: (Dimensions.get('window').width * 95) / 100,
+        width: (WINDOW_WIDTH * 95) / 100,
         height: 200,
-        marginBottom: (Dimensions.get('window').width * 20) / 100,
+        marginBottom: (WINDOW_WIDTH * 20) / 100,
         borderRadius: 10,
     },
     modalText: {

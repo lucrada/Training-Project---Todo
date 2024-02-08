@@ -4,6 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-gesture-handler';
 
+const WINDOW_WIDTH = Dimensions.get('window').width;
+
 const AddCategoryModal = (props): React.JSX.Element => {
     const [selected_1, setSelected_1] = React.useState(false);
     const [selected_2, setSelected_2] = React.useState(false);
@@ -71,8 +73,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         padding: 10,
         backgroundColor: '#fff',
-        width: (Dimensions.get('window').width * 95) / 100,
-        marginBottom: (Dimensions.get('window').width) / 100,
+        width: (WINDOW_WIDTH * 95) / 100,
+        marginBottom: (WINDOW_WIDTH) / 100,
         borderRadius: 10,
     },
     modalText: {

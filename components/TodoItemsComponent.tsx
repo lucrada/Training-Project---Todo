@@ -94,7 +94,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             <Text style={styles.categoryTitle}>{categoryTitle}</Text>
             <VerticalSpacer amount={15} />
             {
-                todos.length === 0 ? <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black'}}>Your todo list appear here</Text> : 
+                todos.filter(item => item.category_id === categoryId).length === 0 ? <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black'}}>Your todo list appear here</Text> : 
                 <ScrollView style={styles.list}>
                         {todos.map(item => item.category_id === categoryId && <TodoItem key={item.id} {...item} finishTask={() => finishTask(item.id)} undoFinishTask={() => undoFinishTask(item.id)} deleteTask={() => deleteTask(item.id)} />)}
                 </ScrollView>

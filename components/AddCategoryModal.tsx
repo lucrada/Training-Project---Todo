@@ -46,7 +46,7 @@ const AddCategoryModal = (props): React.JSX.Element => {
                     <Text style={styles.modalText}>Add new category</Text>
                     <TextInput style={styles.modalTextInput} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter category name" />
                     <Text style={styles.modalText}>Choose a color</Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', alignSelf: 'center', marginBottom: 20, width: Dimensions.get('window').width * 0.7}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', alignSelf: 'center', marginBottom: 20, width: WINDOW_WIDTH * 0.7}}>
                         <TouchableOpacity onPress={() => handleColorSelection(1, '#ff3461')}><View style={{width: 50, height: 50, backgroundColor: '#ff3461', borderRadius: 10, borderWidth: selected_1 ? 2: 0}} /></TouchableOpacity>
                         <TouchableOpacity onPress={() => handleColorSelection(2, '#077ffc')}><View style={{width: 50, height: 50, backgroundColor: '#077ffc', borderRadius: 10, borderWidth: selected_2 ? 2: 0}} /></TouchableOpacity>
                         <TouchableOpacity onPress={() => handleColorSelection(3, '#fead28')}><View style={{width: 50, height: 50, backgroundColor: '#fead28', borderRadius: 10, borderWidth: selected_3 ? 2: 0}} /></TouchableOpacity>

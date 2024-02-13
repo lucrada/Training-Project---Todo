@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     },
     col: {
         flexDirection: 'column',
-        borderWidth: 1,
         width: Dimensions.get('window').width * 0.85,
         alignItems: 'center',
     },
@@ -19,22 +18,46 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 32,
     },
+    neumorphicContainer: {
+        borderRadius: 50,
+        shadowColor: 'rgba(163, 177, 198, 1)',
+        shadowOffset: { width: 9, height: 9 },
+        shadowRadius: 16,
+        elevation: 8,
+    },
     textbox: {
         backgroundColor: '#E0E5EC',
-        borderRadius: 4,
-        shadowColor: 'rgba(163,177,198,0.6)',
-        shadowOffset: { width: 9, height: 9 },
-        shadowOpacity: 1,
-        shadowRadius: 16,
-        elevation: 5,
-        padding: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 8,
+        paddingLeft: 15,
         width: '100%',
+        color: 'gray',
     },
-    buttonContainer: {
-
+    loginButtonContainer: {
+        position: 'relative',
+        paddingVertical: 12,
+        paddingHorizontal: 8,
+        width: '100%',
+        borderRadius: 50,
+        backgroundColor: '#9545ca',
     },
-    buttonText: {
-
+    loginButtonText: {
+        textAlign: 'center',
+        color: '#E0E5EC',
+        fontWeight: 'bold',
+    },
+    registerButtonContainer: {
+        position: 'relative',
+        paddingVertical: 12,
+        paddingHorizontal: 8,
+        width: '100%',
+        borderRadius: 50,
+        backgroundColor: '#E0E5EC',
+    },
+    registerButtonText: {
+        textAlign: 'center',
+        color: '#666',
+        fontWeight: 'bold',
     },
 });
 

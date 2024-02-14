@@ -6,6 +6,7 @@ import VerticalSpacer from '../../utils/VerticalSpacer';
 import { TextInput } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUpdateAuthStatusRequest, getUserLoginRequest, getUserRegisterRequest } from '../../actions/actions';
+import { getErrorMessage } from '../../utils/helperFunctions';
 
 const AuthScreen = ({ navigation }): React.JSX.Element => {
     const [loginView, setLoginView] = React.useState(true);
@@ -24,7 +25,10 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
         if (auth.userId !== '') {
             navigation.navigate('main_screen');
         }
-    }, [auth.userId, navigation, dispatch]);
+        if (auth.errorCode !== '') {
+            Alert.alert('Warning', getErrorMessage(auth.errorCode));
+        }
+    }, [auth.userId, navigation, dispatch, auth.errorCode]);
 
     const _validateCredentials = (username, password, confPass = null) => {
         if (username.trim().length === 0) { return { success: false, message: 'Username cannot be empty' }; }

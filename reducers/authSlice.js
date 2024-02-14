@@ -15,7 +15,7 @@ const authSlice = createSlice({
             if (action.payload.success) {
                 return { errorCode: '', userId: action.payload.userId, name: action.payload.name };
             }
-            return { errorCode: action.payload.errorCode, ...state };
+            return { ...state, errorCode: action.payload.errorCode };
         },
         updateStatus: (state, action) => {
             if (action.payload.success) {
@@ -24,13 +24,13 @@ const authSlice = createSlice({
                 }
                 return { errorCode: '', userId: '', name: '' };
             }
-            return { errorCode: action.payload.errorCode, ...state };
+            return { ...state, errorCode: action.payload.errorCode };
         },
         logoutSuccess: (state, action) => {
             if (action.payload.success) {
                 return { errorCode: '', userId: '', name: '' };
             }
-            return { errorCode: action.payload.errorCode, ...state };
+            return { ...state, errorCode: action.payload.errorCode };
         },
     },
 });

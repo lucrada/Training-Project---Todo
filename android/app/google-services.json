@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "682157568406",
-    "project_id": "tasktracker-pro-d1b1a",
-    "storage_bucket": "tasktracker-pro-d1b1a.appspot.com"
+    "project_number": "12462523206",
+    "project_id": "tasktracker-pro-35081",
+    "storage_bucket": "tasktracker-pro-35081.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:682157568406:android:eaeb8b87140c2029a62db7",
+        "mobilesdk_app_id": "1:12462523206:android:bc294afddcbe3406af5b47",
         "android_client_info": {
-          "package_name": "com.noname.tasktrackerpro"
+          "package_name": "com.todo"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDx5zwizB3vTdXSmOhfg0TJo9ENaUwAUho"
+          "current_key": "AIzaSyC7cIbN5aVS2yFPY3fssdSMU9QcHuy8rVs"
         }
       ],
       "services": {

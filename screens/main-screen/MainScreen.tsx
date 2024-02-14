@@ -22,7 +22,7 @@ const MainScreen = ({ navigation }): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <HeaderComponent navigation={navigation} name="Abhijith K A" />
+      <HeaderComponent navigation={navigation} name={auth.name} />
       <VerticalSpacer amount={20} />
       <CategoryComponent />
       <VerticalSpacer amount={40} />

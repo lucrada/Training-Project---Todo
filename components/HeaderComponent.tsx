@@ -15,6 +15,7 @@ const HeaderComponent = (props): React.JSX.Element => {
                 <Text style={styles.nameText}>{props.name}</Text>
             </View>
             <View style={styles.row}>
+                <TouchableOpacity style={styles.logoutButton} onPress={() => dispatch(getUserLogoutRequest())}><Text style={styles.logoutButtonText}>Log out</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     Alert.alert('Info - Round Buttons', 'Green - Complete\nBlue - Undo\nRed - Delete');
                 }}>
@@ -22,10 +23,8 @@ const HeaderComponent = (props): React.JSX.Element => {
                         <View style={styles.iButton}>
                             <Text style={styles.iButtonText}>i</Text>
                         </View>
-                        <Text style={styles.infoText}>Info</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => dispatch(getUserLogoutRequest())}><Text>Log out</Text></TouchableOpacity>
             </View>
         </View>
     );
@@ -55,13 +54,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10,
+        padding: 5,
         borderWidth: 2,
-        borderRadius: 10,
+        borderRadius: 50,
         borderColor: '#077ffc',
     },
     iButton: {
-        marginRight: 10,
         borderWidth: 1,
         borderColor: '#077ffc',
         borderRadius: 50,
@@ -74,9 +72,16 @@ const styles = StyleSheet.create({
     iButtonText: {
         fontWeight: 'bold',
     },
-    infoText: {
+    logoutButton: {
+        marginRight: 10,
+        padding: 10,
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: '#ff3461',
+    },
+    logoutButtonText: {
         fontWeight: 'bold',
-        color: '#fff',
+        color: '#ff3461',
     },
 });
 

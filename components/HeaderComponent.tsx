@@ -2,24 +2,31 @@
 import React from 'react';
 import { View, StyleSheet, Text, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
+import { getUserLogoutRequest } from '../actions/actions';
 
 const HeaderComponent = (props): React.JSX.Element => {
+    const dispatch = useDispatch();
+
     return (
         <View style={styles.row}>
             <View style={styles.col}>
                 <Text style={styles.greetText}>Hello</Text>
                 <Text style={styles.nameText}>{props.name}</Text>
             </View>
-            <TouchableOpacity onPress={() => {
-                Alert.alert('Info - Round Buttons', 'Green - Complete\nBlue - Undo\nRed - Delete');
-            }}>
-                <View style={styles.infoButton}>
-                    <View style={styles.iButton}>
-                        <Text style={styles.iButtonText}>i</Text>
+            <View style={styles.row}>
+                <TouchableOpacity onPress={() => {
+                    Alert.alert('Info - Round Buttons', 'Green - Complete\nBlue - Undo\nRed - Delete');
+                }}>
+                    <View style={styles.infoButton}>
+                        <View style={styles.iButton}>
+                            <Text style={styles.iButtonText}>i</Text>
+                        </View>
+                        <Text style={styles.infoText}>Info</Text>
                     </View>
-                    <Text style={styles.infoText}>Info</Text>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => dispatch(getUserLogoutRequest())}><Text>Log out</Text></TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -65,7 +72,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     iButtonText: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     infoText: {
         fontWeight: 'bold',

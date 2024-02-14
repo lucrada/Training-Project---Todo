@@ -5,7 +5,7 @@ import styles from './Style';
 import VerticalSpacer from '../../utils/VerticalSpacer';
 import { TextInput } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserLoginRequest } from '../../actions/actions';
+import { getUpdateAuthStatusRequest, getUserLoginRequest, getUserRegisterRequest } from '../../actions/actions';
 
 const AuthScreen = ({ navigation }): React.JSX.Element => {
     const [loginView, setLoginView] = React.useState(true);
@@ -17,6 +17,14 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
     const [registerConfPassword, setRegisterConfPassword] = React.useState('');
 
     const dispatch = useDispatch();
+    const auth = useSelector(state => state.auth);
+
+    React.useEffect(() => {
+        dispatch(getUpdateAuthStatusRequest());
+        if (auth.userId !== '') {
+            navigation.navigate('main_screen');
+        }
+    }, [auth.userId, navigation, dispatch]);
 
     const _validateCredentials = (username, password, confPass = null) => {
         if (username.trim().length === 0) { return { success: false, message: 'Username cannot be empty' }; }
@@ -40,6 +48,7 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
             Alert.alert('Warning', result.message);
             return;
         }
+        dispatch(getUserRegisterRequest({ email: registerUsername, password: registerPassword, name: 'Test name' }));
     };
 
     return (

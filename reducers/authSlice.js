@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     userId: '',
     name: '',
-    errorMessage: '',
+    errorCode: '',
 };
 
 const authSlice = createSlice({
@@ -12,13 +12,25 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         authSuccess: (state, action) => {
-            if (!action.payload) { return state; }
-            console.log(action.payload);
-            return state;
-            // return { userId: action.payload.userId, name: action.payload.name };
+            if (action.payload.success) {
+                return { errorCode: '', userId: action.payload.userId, name: action.payload.name };
+            }
+            return { errorCode: action.payload.errorCode, ...state };
+        },
+        updateStatus: (state, action) => {
+            if (action.payload.success) {
+                if (action.payload.status) {
+                    return { errorCode: '', userId: action.payload.uid, name: action.payload.name };
+                }
+                return { errorCode: '', userId: '', name: '' };
+            }
+            return { errorCode: action.payload.errorCode, ...state };
         },
         logoutSuccess: (state, action) => {
-            return { ...state, userId: '', name: '' };
+            if (action.payload.success) {
+                return { errorCode: '', userId: '', name: '' };
+            }
+            return { errorCode: action.payload.errorCode, ...state };
         },
     },
 });

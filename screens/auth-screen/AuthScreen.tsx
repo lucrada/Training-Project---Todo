@@ -46,6 +46,8 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
             return;
         }
         dispatch(getUserLoginRequest({ email: loginUsername, password: loginPassword }));
+        setLoginUsername('');
+        setLoginPassword('');
     };
 
     const _handleRegister = () => {
@@ -55,6 +57,10 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
             return;
         }
         dispatch(getUserRegisterRequest({ email: registerUsername, password: registerPassword, name: registerName }));
+        setRegisterUsername('');
+        setRegisterName('');
+        setRegisterPassword('');
+        setRegisterConfPassword('');
     };
 
     return (

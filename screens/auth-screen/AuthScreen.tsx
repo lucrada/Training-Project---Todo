@@ -14,6 +14,7 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
     const [loginUsername, setLoginUsername] = React.useState('');
     const [loginPassword, setLoginPassword] = React.useState('');
     const [registerUsername, setRegisterUsername] = React.useState('');
+    const [registerName, setRegisterName] = React.useState('');
     const [registerPassword, setRegisterPassword] = React.useState('');
     const [registerConfPassword, setRegisterConfPassword] = React.useState('');
 
@@ -30,10 +31,11 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
         }
     }, [auth.userId, navigation, dispatch, auth.errorCode]);
 
-    const _validateCredentials = (username, password, confPass = null) => {
+    const _validateCredentials = (username, password, confPass = null, name = null) => {
         if (username.trim().length === 0) { return { success: false, message: 'Username cannot be empty' }; }
         if (password.trim().length === 0) { return { success: false, message: 'Password cannot be empty' }; }
         if (confPass != null && (confPass.trim().length === 0 || password.trim() !== confPass.trim())) { return { success: false, message: 'Passwords are not matching' }; }
+        if (name != null && name.trim().length === 0) { return { success: false, message: 'Name cannot be empty' }; }
         return { success: true };
     };
 
@@ -47,12 +49,12 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
     };
 
     const _handleRegister = () => {
-        let result = _validateCredentials(registerUsername, registerPassword, registerConfPassword);
+        let result = _validateCredentials(registerUsername, registerPassword, registerConfPassword, registerName);
         if (!result.success) {
             Alert.alert('Warning', result.message);
             return;
         }
-        dispatch(getUserRegisterRequest({ email: registerUsername, password: registerPassword, name: 'Test name' }));
+        dispatch(getUserRegisterRequest({ email: registerUsername, password: registerPassword, name: registerName }));
     };
 
     return (
@@ -60,7 +62,7 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
             {loginView ? <View style={styles.col}>
                 <Text style={styles.title}>TaskTracker Pro</Text>
                 <VerticalSpacer amount={40} />
-                <TextInput value={loginUsername} onChangeText={(text) => setLoginUsername(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Username" placeholderTextColor={'gray'} cursorColor={'gray'} />
+                <TextInput value={loginUsername} onChangeText={(text) => setLoginUsername(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Email" placeholderTextColor={'gray'} cursorColor={'gray'} />
                 <VerticalSpacer amount={25} />
                 <TextInput value={loginPassword} onChangeText={(text) => setLoginPassword(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Password" placeholderTextColor={'gray'} secureTextEntry={true} cursorColor={'gray'} />
                 <VerticalSpacer amount={40} />
@@ -71,7 +73,9 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
                 <View style={styles.col}>
                     <Text style={styles.title}>TaskTracker Pro</Text>
                     <VerticalSpacer amount={40} />
-                    <TextInput value={registerUsername} onChangeText={(text) => setRegisterUsername(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Username" placeholderTextColor={'gray'} cursorColor={'gray'} />
+                    <TextInput value={registerUsername} onChangeText={(text) => setRegisterUsername(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Email" placeholderTextColor={'gray'} cursorColor={'gray'} />
+                    <VerticalSpacer amount={25} />
+                    <TextInput value={registerName} onChangeText={(text) => setRegisterName(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Name" placeholderTextColor={'gray'} cursorColor={'gray'} />
                     <VerticalSpacer amount={25} />
                     <TextInput value={registerPassword} onChangeText={(text) => setRegisterPassword(text)} style={{ ...styles.textbox, ...styles.neumorphicContainer }} placeholder="Password" placeholderTextColor={'gray'} secureTextEntry={true} cursorColor={'gray'} />
                     <VerticalSpacer amount={25} />

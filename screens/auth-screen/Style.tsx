@@ -59,6 +59,23 @@ const styles = StyleSheet.create({
         color: '#666',
         fontWeight: 'bold',
     },
+    loaderContainer: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        zIndex: 3,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loaderContainerText: {
+        fontSize: 20,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
 });
 
 export default styles;

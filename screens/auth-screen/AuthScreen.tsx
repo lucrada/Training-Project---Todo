@@ -18,10 +18,13 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
     const [registerPassword, setRegisterPassword] = React.useState('');
     const [registerConfPassword, setRegisterConfPassword] = React.useState('');
 
+    const [loaderShown, setLoaderShown] = React.useState(false);
+
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
 
     React.useEffect(() => {
+        setLoaderShown(false);
         dispatch(getUpdateAuthStatusRequest());
         if (auth.userId !== '') {
             navigation.navigate('main_screen');
@@ -40,9 +43,11 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
     };
 
     const _handleLogin = () => {
+        setLoaderShown(true);
         let result = _validateCredentials(loginUsername, loginPassword);
         if (!result.success) {
             Alert.alert('Warning', result.message);
+            setLoaderShown(false);
             return;
         }
         dispatch(getUserLoginRequest({ email: loginUsername, password: loginPassword }));
@@ -51,9 +56,11 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
     };
 
     const _handleRegister = () => {
+        setLoaderShown(true);
         let result = _validateCredentials(registerUsername, registerPassword, registerConfPassword, registerName);
         if (!result.success) {
             Alert.alert('Warning', result.message);
+            setLoaderShown(false);
             return;
         }
         dispatch(getUserRegisterRequest({ email: registerUsername, password: registerPassword, name: registerName }));
@@ -65,6 +72,9 @@ const AuthScreen = ({ navigation }): React.JSX.Element => {
 
     return (
         <View style={styles.mainContainer}>
+            {loaderShown ? <View style={styles.loaderContainer}>
+                <Text style={styles.loaderContainerText}>Please wait...</Text>
+            </View> : null}
             {loginView ? <View style={styles.col}>
                 <Text style={styles.title}>TaskTracker Pro</Text>
                 <VerticalSpacer amount={40} />

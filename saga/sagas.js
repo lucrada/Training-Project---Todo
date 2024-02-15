@@ -1,18 +1,19 @@
 /* eslint-disable prettier/prettier */
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { put, takeEvery, all, call } from 'redux-saga/effects';
-import { UPDATE_AUTH_STATUS_REQUEST, USER_LOGIN_REQUEST, USER_LOGOUT_REQUEST, USER_REGISTER_REQUEST } from '../actions/actions';
+import { ADD_CATEGORY_REQUEST, ADD_TODO_REQUEST, DECREMENT_PENDING_TASK_REQUEST, FETCH_CATEGORIES_REQUEST, FETCH_TODOS_REQUEST, INCREMENT_PENDING_TASK_REQUEST, REMOVE_TODO_REQUEST, TOGGLE_TODO_REQUEST, UPDATE_AUTH_STATUS_REQUEST, USER_LOGIN_REQUEST, USER_LOGOUT_REQUEST, USER_REGISTER_REQUEST } from '../actions/actions';
 
-async function loginAPI(email, password) {
+const loginAPI = async (email, password) => {
     try {
         const userAuthSuccess = await auth().signInWithEmailAndPassword(email, password);
         return { success: true, userId: userAuthSuccess.user.uid, name: userAuthSuccess.user.displayName };
     } catch (error) {
         return { success: false, errorCode: error.code };
     }
-}
+};
 
-async function registerAPI(email, password, name) {
+const registerAPI = async (email, password, name) => {
     try {
         const userAuthSuccess = await auth().createUserWithEmailAndPassword(email, password);
         await userAuthSuccess.user.updateProfile({ displayName: name });
@@ -20,24 +21,173 @@ async function registerAPI(email, password, name) {
     } catch (error) {
         return { success: false, errorCode: error.code };
     }
-}
+};
 
-async function logoutAPI() {
+const logoutAPI = async () => {
     try {
         await auth().signOut();
         return { success: true };
     } catch (error) {
         return { success: false, errorrCode: error.code };
     }
-}
+};
 
-async function authStatusAPI() {
+function authStatusAPI() {
     try {
         const user = auth().currentUser;
         return { success: true, status: !!user, uid: user ? user.uid : '', name: user ? user.displayName : '' };
     } catch (error) {
         return { success: false, errorCode: error.code };
     }
+}
+
+const storeData = async (collection, data) => {
+    const user = auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    if (uid) {
+        try {
+            const documentRef = await firestore().collection(collection).doc(uid).collection('data').add(data);
+            return { success: true, id: documentRef.id };
+        } catch (error) {
+            return { success: false };
+        }
+    } else {
+        return { success: false };
+    }
+};
+
+const deleteTodo = async (documentId) => {
+    const user = auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    if (uid) {
+        try {
+            await firestore().collection('todos').doc(uid).collection('data').doc(documentId).delete();
+            return { success: true };
+        } catch (error) {
+            return { success: false };
+        }
+    } else {
+        return { success: false };
+    }
+};
+
+const toggleTodo = async (documentId) => {
+    const user = auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    if (uid) {
+        try {
+            const documentRef = firestore().collection('todos').doc(uid).collection('data').doc(documentId);
+            const docSnapshot = await documentRef.get();
+
+            const currentFinishedStatus = docSnapshot.data().finished || false;
+            const updatedFinishedStatus = !currentFinishedStatus;
+
+            await documentRef.update({ finished: updatedFinishedStatus });
+
+            return { success: true };
+        } catch (error) {
+            return { success: false };
+        }
+    } else {
+        return { success: false };
+    }
+};
+
+const changePending = async (documentId, incr = true) => {
+    const user = auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    if (uid) {
+        try {
+            const documentRef = firestore().collection('categories').doc(uid).collection('data').doc(documentId);
+            const docSnapshot = await documentRef.get();
+
+            const currentPendingNumber = parseInt(docSnapshot.data().pending, 10);
+            const updatedPendingNumber = incr ? currentPendingNumber + 1 : currentPendingNumber - 1;
+
+            await documentRef.update({ pending: updatedPendingNumber });
+
+            return { success: true };
+        } catch (error) {
+            return { success: false };
+        }
+    } else {
+        return { success: false };
+    }
+};
+
+const fetchCollection = async (collection) => {
+    const user = auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    if (uid) {
+        try {
+            const querySnapshot = await firestore().collection(collection).doc(uid).collection('data').get();
+
+            const documents = [];
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                    documents.push({ id: doc.id, ...doc.data() });
+                });
+            }
+
+            return { success: true, payload: documents };
+        } catch (error) {
+            return { success: false };
+        }
+    } else {
+        return { success: false };
+    }
+};
+
+function* fetchCategoryAsync() {
+    const result = yield call(() => fetchCollection('categories'));
+    yield put({ type: 'category/initCategories', payload: result.success ? result.payload : [] });
+}
+
+function* fetchTodoAsync() {
+    const result = yield call(() => fetchCollection('todos'));
+    yield put({ type: 'todos/initTodos', payload: result.success ? result.payload : [] });
+}
+
+function* addCategoryAsync(action) {
+    const category = action.payload;
+    const result = yield call(() => storeData('categories', category));
+    yield put({ type: 'category/addCategory', payload: { success: result.success, category: result.success ? { ...category, id: result.id } : null } });
+}
+
+function* incrementPendingAsync(action) {
+    const id = action.payload;
+    const result = yield call(() => changePending(id));
+    yield put({ type: 'category/incrementPendingTask', payload: { success: result.success, id: result.success ? id : null } });
+
+}
+
+function* decrementPendingAsync(action) {
+    const id = action.payload;
+    const result = yield call(() => changePending(id, false));
+    yield put({ type: 'category/decrementPendingTask', payload: { success: result.success, id: result.success ? id : null } });
+}
+
+function* toggleTodoAsync(action) {
+    const id = action.payload;
+    const result = yield call(() => toggleTodo(id));
+    yield put({ type: 'todos/toggleStatus', payload: { success: result.success, id: result.success ? id : null } });
+}
+
+function* removeTodoAsync(action) {
+    const id = action.payload;
+    const result = yield call(() => deleteTodo(id));
+    yield put({ type: 'todos/deleteTodo', payload: { success: result.success, id: result.success ? id : null } });
+}
+
+function* addTodoAsync(action) {
+    const todo = action.payload;
+    const result = yield call(() => storeData('todos', todo));
+    yield put({ type: 'todos/addTodo', payload: { success: result.success, todo: result.success ? { ...todo, id: result.id } : null } });
 }
 
 function* loginAsync(action) {
@@ -78,6 +228,51 @@ function* authStatusSaga() {
     yield takeEvery(UPDATE_AUTH_STATUS_REQUEST, updateStatusAsync);
 }
 
+function* addCategorySaga() {
+    yield takeEvery(ADD_CATEGORY_REQUEST, addCategoryAsync);
+}
+
+function* addTodoSaga() {
+    yield takeEvery(ADD_TODO_REQUEST, addTodoAsync);
+}
+
+function* removeTodoSaga() {
+    yield takeEvery(REMOVE_TODO_REQUEST, removeTodoAsync);
+}
+
+function* toggleTodoSaga() {
+    yield takeEvery(TOGGLE_TODO_REQUEST, toggleTodoAsync);
+}
+
+function* incrementPendingSaga() {
+    yield takeEvery(INCREMENT_PENDING_TASK_REQUEST, incrementPendingAsync);
+}
+
+function* decrementPendingSaga() {
+    yield takeEvery(DECREMENT_PENDING_TASK_REQUEST, decrementPendingAsync);
+}
+
+function* fetchCategorySaga() {
+    yield takeEvery(FETCH_CATEGORIES_REQUEST, fetchCategoryAsync);
+}
+
+function* fetchTodosSaga() {
+    yield takeEvery(FETCH_TODOS_REQUEST, fetchTodoAsync);
+}
+
 export default function* mySaga() {
-    yield all([loginSaga(), logoutSaga(), registerSaga(), authStatusSaga()]);
+    yield all([
+        loginSaga(),
+        logoutSaga(),
+        registerSaga(),
+        authStatusSaga(),
+        addCategorySaga(),
+        addTodoSaga(),
+        removeTodoSaga(),
+        toggleTodoSaga(),
+        incrementPendingSaga(),
+        decrementPendingSaga(),
+        fetchCategorySaga(),
+        fetchTodosSaga(),
+    ]);
 }

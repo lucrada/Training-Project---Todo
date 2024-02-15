@@ -4,9 +4,17 @@ import { View, StyleSheet, Text, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { getUserLogoutRequest } from '../actions/actions';
+import { resetTodos } from '../reducers/todoSlice';
+import { resetCategories } from '../reducers/categorySlice';
 
 const HeaderComponent = (props): React.JSX.Element => {
     const dispatch = useDispatch();
+
+    const _resetStateAndLogout = () => {
+        dispatch(getUserLogoutRequest());
+        dispatch(resetTodos());
+        dispatch(resetCategories());
+    };
 
     return (
         <View style={styles.row}>
@@ -15,7 +23,7 @@ const HeaderComponent = (props): React.JSX.Element => {
                 <Text style={styles.nameText}>{props.name}</Text>
             </View>
             <View style={styles.row}>
-                <TouchableOpacity style={styles.logoutButton} onPress={() => dispatch(getUserLogoutRequest())}><Text style={styles.logoutButtonText}>Log out</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.logoutButton} onPress={_resetStateAndLogout}><Text style={styles.logoutButtonText}>Log out</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     Alert.alert('Info - Round Buttons', 'Green - Complete\nBlue - Undo\nRed - Delete');
                 }}>

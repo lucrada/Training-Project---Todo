@@ -3,10 +3,8 @@ import React from 'react';
 import VerticalSpacer from '../utils/VerticalSpacer';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert, Animated } from 'react-native';
 import AddTodoModal from './AddTodoModal';
-import { nanoid } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodo, toggleStatus, deleteTodo } from '../reducers/todoSlice';
-import { decrementPendingTask, incrementPendingTask } from '../reducers/categorySlice';
+import { getAddTodoRequest, getDecrementRequest, getFetchTodosRequest, getIncrementRequest, getRemoveTodoRequest, getToggleTodoRequest } from '../actions/actions';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 const WINDOW_HEIGHT = Dimensions.get('window').height;
@@ -31,13 +29,13 @@ const TodoItem = (props): React.JSX.Element => {
     });
 
     return (
-        <Animated.View style={{...styles.todoItem, width: width, opacity: opacity}}>
+        <Animated.View style={{ ...styles.todoItem, width: width, opacity: opacity }}>
             <View style={styles.todoItemDetail}>
                 <View style={styles.todoItemBullet} />
                 <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
             </View>
             <View style={styles.todoItemActions}>
-                <TouchableOpacity onPress={props.finished ? props.undoFinishTask : props.finishTask}><View style={{...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5'}} /></TouchableOpacity>
+                <TouchableOpacity onPress={props.finished ? props.undoFinishTask : props.finishTask}><View style={{ ...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5' }} /></TouchableOpacity>
                 <TouchableOpacity onPress={props.deleteTask}><View style={styles.action2} /></TouchableOpacity>
             </View>
         </Animated.View>
@@ -49,6 +47,10 @@ const TodoItemsComponent = (props): React.JSX.Element => {
     const [newTodoItem, setNewTodoItem] = React.useState('');
 
     const dispatch = useDispatch();
+    React.useEffect(() => {
+        dispatch(getFetchTodosRequest());
+    }, [dispatch]);
+
     const todoState = useSelector(state => state.todo);
     const todos = todoState.todos;
     const categoryState = useSelector(state => state.category);
@@ -70,26 +72,26 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             closeModal();
             return;
         }
-        let newTodo = { id: nanoid(), category_id: categoryId, task: newTodoItem, finished: false};
+        let newTodo = { category_id: categoryId, task: newTodoItem, finished: false };
         setNewTodoItem('');
-        dispatch(addTodo(newTodo));
-        dispatch(incrementPendingTask(categoryId));
+        dispatch(getAddTodoRequest(newTodo));
+        dispatch(getIncrementRequest(categoryId));
         closeModal();
     };
 
     const finishTask = (itemId) => {
-        dispatch(toggleStatus(itemId));
-        dispatch(decrementPendingTask(categoryId));
+        dispatch(getToggleTodoRequest(itemId));
+        dispatch(getDecrementRequest(categoryId));
     };
 
     const undoFinishTask = (itemId) => {
-        dispatch(toggleStatus(itemId));
-        dispatch(incrementPendingTask(categoryId));
+        dispatch(getToggleTodoRequest(itemId));
+        dispatch(getIncrementRequest(categoryId));
     };
 
     const deleteTask = (itemId) => {
-        dispatch(deleteTodo(itemId));
-        todos.map(item => item.id === itemId && !item.finished && dispatch(decrementPendingTask(categoryId)));
+        dispatch(getRemoveTodoRequest(itemId));
+        todos.map(item => item.id === itemId && !item.finished && dispatch(getDecrementRequest(categoryId)));
     };
 
     return (
@@ -97,13 +99,13 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             <Text style={styles.categoryTitle}>{categoryTitle}</Text>
             <VerticalSpacer amount={15} />
             {
-                todos.filter(item => item.category_id === categoryId).length === 0 ? <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black'}}>Your todo list appear here</Text> : 
-                <ScrollView style={styles.list}>
+                todos.filter(item => item.category_id === categoryId).length === 0 ? <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', color: 'black' }}>Your todo list appear here</Text> :
+                    <ScrollView style={styles.list}>
                         {todos.map(item => item.category_id === categoryId && <TodoItem key={item.id} {...item} finishTask={() => finishTask(item.id)} undoFinishTask={() => undoFinishTask(item.id)} deleteTask={() => deleteTask(item.id)} />)}
-                </ScrollView>
+                    </ScrollView>
             }
             <VerticalSpacer amount={15} />
-            <TouchableOpacity style={styles.addButtonTouch} onPress={openModal}><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7}}>+</Text></View></TouchableOpacity>
+            <TouchableOpacity style={styles.addButtonTouch} onPress={openModal}><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7 }}>+</Text></View></TouchableOpacity>
             <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
         </View>
     );

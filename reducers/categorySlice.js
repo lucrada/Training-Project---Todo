@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     categories: [],
@@ -13,8 +13,23 @@ const categorySlice = createSlice({
     name: 'category',
     initialState,
     reducers: {
+        initCategories: (state, action) => {
+            state.categories = action.payload;
+            if (state.categories.length > 0) {
+                state.selectedCategory.id = state.categories[0].id;
+                state.selectedCategory.title = state.categories[0].title;
+            }
+        },
+        resetCategories: (state) => {
+            state.categories = [];
+            state.selectedCategory.id = 0;
+            state.selectedCategory.title = '';
+        },
         addCategory: (state, action) => {
-            state.categories = [action.payload, ...state.categories];
+            if (action.payload.success) {
+                state.categories = [action.payload.category, ...state.categories];
+                state.selectedCategory = { id: action.payload.category.id, title: action.payload.category.title };
+            }
         },
         selectCategory: (state, action) => {
             state.selectedCategory.id = action.payload;
@@ -22,13 +37,17 @@ const categorySlice = createSlice({
             state.selectedCategory.title = category.title;
         },
         incrementPendingTask: (state, action) => {
-            state.categories.map(item => item.id === action.payload && item.pending++);
+            if (action.payload.success) {
+                state.categories.map(item => item.id === action.payload.id && item.pending++);
+            }
         },
         decrementPendingTask: (state, action) => {
-            state.categories.map(item => item.id === action.payload && item.pending--);
+            if (action.payload.success) {
+                state.categories.map(item => item.id === action.payload.id && item.pending--);
+            }
         },
     },
 });
 
-export const { addCategory, selectCategory, incrementPendingTask, decrementPendingTask } = categorySlice.actions;
+export const { initCategories, addCategory, selectCategory, incrementPendingTask, decrementPendingTask, resetCategories } = categorySlice.actions;
 export default categorySlice.reducer;

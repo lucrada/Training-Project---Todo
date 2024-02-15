@@ -4,9 +4,8 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'rea
 import AddTodoModal from './AddTodoModal';
 import AddCategoryModal from './AddCategoryModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
-import { addCategory, incrementPendingTask, selectCategory } from '../reducers/categorySlice';
-import { addTodo } from '../reducers/todoSlice';
+import { getAddCategoryRequest, getAddTodoRequest, getFetchCategoriesRequest, getIncrementRequest } from '../actions/actions';
+import { selectCategory } from '../reducers/categorySlice';
 
 const CategoryItem = (props): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -24,23 +23,23 @@ const CategoryItem = (props): React.JSX.Element => {
             closeModal();
             return;
         }
-        let newTodo = { id: nanoid(), category_id: props.id, task: newTodoItem, finished: false };
-        dispatch(addTodo(newTodo));
+        let newTodo = { category_id: props.id, task: newTodoItem, finished: false };
+        dispatch(getAddTodoRequest(newTodo));
         dispatch(selectCategory(newTodo.category_id));
-        dispatch(incrementPendingTask(newTodo.category_id));
+        dispatch(getIncrementRequest(newTodo.category_id));
         closeModal();
     };
 
     return (
         <View>
-        <TouchableOpacity onPress={() => dispatch(selectCategory(props.id))}>
-            <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
-                <Text style={styles.categoryTitle}>{props.title}</Text>
-                <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
-                <TouchableOpacity onPress={openModal} style={{width: 30, }}><Text style={{fontSize: 40, fontWeight: 'bold', width: 30, }}>+</Text></TouchableOpacity>
-            </View>
-        </TouchableOpacity>
-        <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
+            <TouchableOpacity onPress={() => dispatch(selectCategory(props.id))}>
+                <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
+                    <Text style={styles.categoryTitle}>{props.title}</Text>
+                    <Text style={styles.categoryPending}>{props.pending} pending tasks</Text>
+                    <TouchableOpacity onPress={openModal} style={{ width: 30 }}><Text style={{ fontSize: 40, fontWeight: 'bold', width: 30 }}>+</Text></TouchableOpacity>
+                </View>
+            </TouchableOpacity>
+            <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
         </View>
     );
 };
@@ -60,6 +59,11 @@ const CategoryComponent = (props): React.JSX.Element => {
     const [newCategoryItem, setNewCategoryItem] = React.useState('');
     const [color, setColor] = React.useState('');
 
+    const dispatch = useDispatch();
+    React.useEffect(() => {
+        dispatch(getFetchCategoriesRequest());
+    }, [dispatch]);
+
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     const handleTextChange = (task) => setNewCategoryItem(task);
@@ -67,23 +71,21 @@ const CategoryComponent = (props): React.JSX.Element => {
 
     const categoryState = useSelector(state => state.category);
     const items = categoryState.categories;
-    const dispatch = useDispatch();
 
     const addNewCategoryItem = () => {
-        if (newCategoryItem === '') return;
-        if (color === '') return; 
-        let newCategory = { id: nanoid(), title: newCategoryItem, color: color, pending: 0};
-        dispatch(addCategory(newCategory));
-        dispatch(selectCategory(newCategory.id));
+        if (newCategoryItem === '') { return; }
+        if (color === '') { return; }
+        let newCategory = { title: newCategoryItem, color: color, pending: 0 };
+        dispatch(getAddCategoryRequest(newCategory));
         closeModal();
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Category</Text>
-            <ScrollView horizontal={true} style={{minHeight: 150,}}>
+            <ScrollView horizontal={true} style={{ minHeight: 150 }}>
                 <AddCategoryItem handlePress={openModal} />
-                {items.map(category => <CategoryItem key={category.id} {...category}/>)}
+                {items.map(category => <CategoryItem key={category.id} {...category} />)}
             </ScrollView>
             <AddCategoryModal closeModal={closeModal} handleTextChange={handleTextChange} handleColorChange={handleColorSelect} addItem={addNewCategoryItem} modalVisible={modalVisible} />
         </View>

@@ -31,7 +31,12 @@ const CategoryItem = (props): React.JSX.Element => {
     };
 
     return (
-        <View>
+        <View style={{ position: 'relative' }}>
+            <TouchableOpacity style={styles.categoryCloseButton}>
+                <View style={styles.categoryContainerCloseButtonContainer}>
+                    <Text style={styles.categoryCloseButtonText}>&#10060;</Text>
+                </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => dispatch(selectCategory(props.id))}>
                 <View style={{ ...styles.categoryContainer, backgroundColor: props.color }}>
                     <Text style={styles.categoryTitle}>{props.title}</Text>
@@ -83,7 +88,7 @@ const CategoryComponent = (props): React.JSX.Element => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Category</Text>
-            <ScrollView horizontal={true} style={{ minHeight: 150 }}>
+            <ScrollView horizontal={true} style={{ minHeight: 170 }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}>
                 <AddCategoryItem handlePress={openModal} />
                 {items.map(category => <CategoryItem key={category.id} {...category} />)}
             </ScrollView>
@@ -103,6 +108,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     categoryContainer: {
+        position: 'relative',
         flexDirection: 'column',
         justifyContent: 'space-around',
         width: 120,
@@ -123,7 +129,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     addContainer: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         width: 120,
@@ -134,6 +139,27 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#9545ca',
         marginRight: 10,
+    },
+    categoryCloseButton: {
+        position: 'absolute',
+        zIndex: 10,
+        right: 4,
+        top: -10,
+    },
+    categoryContainerCloseButtonContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 30,
+        height: 30,
+        borderRadius: 50,
+        backgroundColor: '#fff',
+        elevation: 3,
+        shadowRadius: 3,
+    },
+    categoryCloseButtonText: {
+        fontWeight: 'bold',
+        fontSize: 10,
+        textAlign: 'center',
     },
 });
 

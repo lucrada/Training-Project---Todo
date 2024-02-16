@@ -15,6 +15,11 @@ const todoSlice = createSlice({
         resetTodos: (state) => {
             state.todos = [];
         },
+        clearTodosWithCategory: (state, action) => {
+            if (!action.payload.success) { return; }
+            let catId = action.payload.id;
+            state.todos = state.todos.filter(item => item.category_id !== catId);
+        },
         addTodo: (state, action) => {
             if (action.payload.success) {
                 state.todos = [action.payload.todo, ...state.todos];

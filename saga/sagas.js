@@ -2,7 +2,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { put, takeEvery, all, call } from 'redux-saga/effects';
-import { ADD_CATEGORY_REQUEST, ADD_TODO_REQUEST, DECREMENT_PENDING_TASK_REQUEST, FETCH_CATEGORIES_REQUEST, FETCH_TODOS_REQUEST, INCREMENT_PENDING_TASK_REQUEST, REMOVE_TODO_REQUEST, TOGGLE_TODO_REQUEST, UPDATE_AUTH_STATUS_REQUEST, USER_LOGIN_REQUEST, USER_LOGOUT_REQUEST, USER_REGISTER_REQUEST } from '../actions/actions';
+import { ADD_CATEGORY_REQUEST, ADD_TODO_REQUEST, DECREMENT_PENDING_TASK_REQUEST, DELETE_CATEGORY_REQUEST, FETCH_CATEGORIES_REQUEST, FETCH_TODOS_REQUEST, INCREMENT_PENDING_TASK_REQUEST, REMOVE_TODO_REQUEST, TOGGLE_TODO_REQUEST, UPDATE_AUTH_STATUS_REQUEST, USER_LOGIN_REQUEST, USER_LOGOUT_REQUEST, USER_REGISTER_REQUEST } from '../actions/actions';
 
 const loginAPI = async (email, password) => {
     try {
@@ -143,6 +143,40 @@ const fetchCollection = async (collection) => {
     }
 };
 
+const deleteCategory = async (catId) => {
+    const user = auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    if (uid) {
+        try {
+            await firestore().collection('categories').doc(uid).collection('data').doc(catId).delete();
+            const todosRef = firestore().collection('todos').doc(uid).collection('data');
+            const query = todosRef.where('category_id', '==', catId);
+            const querySnapshot = await query.get();
+            const batch = firestore().batch();
+            querySnapshot.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+
+            await batch.commit();
+            return { success: true };
+        } catch (error) {
+            return { success: false };
+        }
+    } else {
+        return { success: false };
+    }
+};
+
+
+
+function* deleteCategoryAsync(action) {
+    const catId = action.payload;
+    const result = yield call(() => deleteCategory(catId));
+    yield put({ type: 'category/deleteCategory', payload: { success: result.success, id: result.success ? catId : null } });
+    yield put({ type: 'todos/clearTodosWithCategory', payload: { success: result.success, id: result.success ? catId : null } });
+}
+
 function* fetchCategoryAsync() {
     const result = yield call(() => fetchCollection('categories'));
     yield put({ type: 'category/initCategories', payload: result.success ? result.payload : [] });
@@ -260,6 +294,10 @@ function* fetchTodosSaga() {
     yield takeEvery(FETCH_TODOS_REQUEST, fetchTodoAsync);
 }
 
+function* deleteCategorySaga() {
+    yield takeEvery(DELETE_CATEGORY_REQUEST, deleteCategoryAsync);
+}
+
 export default function* mySaga() {
     yield all([
         loginSaga(),
@@ -274,5 +312,6 @@ export default function* mySaga() {
         decrementPendingSaga(),
         fetchCategorySaga(),
         fetchTodosSaga(),
+        deleteCategorySaga(),
     ]);
 }

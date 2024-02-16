@@ -4,7 +4,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'rea
 import AddTodoModal from './AddTodoModal';
 import AddCategoryModal from './AddCategoryModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAddCategoryRequest, getAddTodoRequest, getFetchCategoriesRequest, getIncrementRequest } from '../actions/actions';
+import { getAddCategoryRequest, getAddTodoRequest, getDeleteCategoryRequest, getFetchCategoriesRequest, getIncrementRequest } from '../actions/actions';
 import { selectCategory } from '../reducers/categorySlice';
 
 const CategoryItem = (props): React.JSX.Element => {
@@ -32,7 +32,7 @@ const CategoryItem = (props): React.JSX.Element => {
 
     return (
         <View style={{ position: 'relative' }}>
-            <TouchableOpacity style={styles.categoryCloseButton}>
+            <TouchableOpacity onPress={() => dispatch(getDeleteCategoryRequest(props.id))} style={styles.categoryCloseButton}>
                 <View style={styles.categoryContainerCloseButtonContainer}>
                     <Text style={styles.categoryCloseButtonText}>&#10060;</Text>
                 </View>

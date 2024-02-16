@@ -11,6 +11,7 @@ export const INCREMENT_PENDING_TASK_REQUEST = 'INCREMENT_PENDING_TASK';
 export const DECREMENT_PENDING_TASK_REQUEST = 'DECREMENT_PENDING_TASK';
 export const FETCH_TODOS_REQUEST = 'FETCH_TODOS_REQUEST';
 export const FETCH_CATEGORIES_REQUEST = 'FETCH_CATEGORIES_REQUEST';
+export const DELETE_CATEGORY_REQUEST = 'DELETE_CATEGORY_REQUEST';
 
 const getUserLoginRequest = (credentials) => {
     return { type: USER_LOGIN_REQUEST, payload: credentials };
@@ -60,6 +61,10 @@ const getFetchTodosRequest = () => {
     return { type: FETCH_TODOS_REQUEST };
 };
 
+const getDeleteCategoryRequest = (catId) => {
+    return { type: DELETE_CATEGORY_REQUEST, payload: catId };
+};
+
 export {
     getUserLoginRequest,
     getUserLogoutRequest,
@@ -73,4 +78,5 @@ export {
     getDecrementRequest,
     getFetchCategoriesRequest,
     getFetchTodosRequest,
+    getDeleteCategoryRequest,
 };

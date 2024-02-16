@@ -31,6 +31,21 @@ const categorySlice = createSlice({
                 state.selectedCategory = { id: action.payload.category.id, title: action.payload.category.title };
             }
         },
+        deleteCategory: (state, action) => {
+            if (!action.payload.success) { return; }
+            let catId = action.payload.id;
+            state.categories = state.categories.filter(item => item.id !== catId);
+            if (state.categories.length === 0) {
+                state.categories = [];
+                state.selectedCategory.id = 0;
+                state.selectedCategory.title = '';
+                return;
+            }
+            if (state.selectedCategory.id === catId) {
+                state.selectedCategory.id = state.categories[0].id;
+                state.selectedCategory.title = state.categories[0].title;
+            }
+        },
         selectCategory: (state, action) => {
             state.selectedCategory.id = action.payload;
             let category = state.categories.filter(item => item.id === action.payload)[0];

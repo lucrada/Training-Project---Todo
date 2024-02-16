@@ -82,13 +82,14 @@ const CategoryComponent = (props): React.JSX.Element => {
         if (color === '') { return; }
         let newCategory = { title: newCategoryItem, color: color, pending: 0 };
         dispatch(getAddCategoryRequest(newCategory));
+        setNewCategoryItem('');
         closeModal();
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Category</Text>
-            <ScrollView horizontal={true} style={{ minHeight: 170 }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}>
+            <ScrollView horizontal={true} style={{ minHeight: 170 }} contentContainerStyle={{ alignItems: 'center' }}>
                 <AddCategoryItem handlePress={openModal} />
                 {items.map(category => <CategoryItem key={category.id} {...category} />)}
             </ScrollView>

@@ -12,8 +12,30 @@ const WINDOW_HEIGHT = Dimensions.get('window').height;
 const TodoItem = (props): React.JSX.Element => {
     const width = React.useState(new Animated.Value(0))[0];
     const opacity = React.useState(new Animated.Value(0))[0];
+    const [formattedDate, setFormattedDate] = React.useState('');
+    const [formattedTime, setFormattedTime] = React.useState('');
 
     React.useEffect(() => {
+        if (props.date) {
+            const date = new Date(props.date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+            });
+            setFormattedDate(formattedDate);
+        }
+
+        if (props.time) {
+            const time = new Date(props.time);
+            let formattedTime = time.toLocaleDateString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+            });
+            formattedTime = formattedTime.split(' ')[1] + ' ' + formattedTime.split(' ')[2];
+            setFormattedTime(formattedTime);
+        }
         Animated.parallel([
             Animated.timing(opacity, {
                 toValue: 1,
@@ -26,13 +48,21 @@ const TodoItem = (props): React.JSX.Element => {
                 useNativeDriver: false,
             }),
         ]).start();
-    });
+    }, [props.date, props.time, opacity, width]);
 
     return (
         <Animated.View style={{ ...styles.todoItem, width: width, opacity: opacity }}>
             <View style={styles.todoItemDetail}>
-                <View style={styles.todoItemBullet} />
-                <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={styles.todoItemBullet} />
+                    <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
+                </View>
+                <View>
+                    <VerticalSpacer amount={10} />
+                    {props.date ? <View style={{ backgroundColor: '#040d3a', padding: 5, borderRadius: 10 }}><Text style={{ color: '#fff' }}>{formattedDate}</Text></View> : null}
+                    <VerticalSpacer amount={10} />
+                    {props.time ? <View style={{ backgroundColor: '#040d3a', padding: 5, borderRadius: 10 }}><Text style={{ color: '#fff' }}>{formattedTime}</Text></View> : null}
+                </View>
             </View>
             <View style={styles.todoItemActions}>
                 <TouchableOpacity onPress={props.finished ? props.undoFinishTask : props.finishTask}><View style={{ ...styles.action1, backgroundColor: props.finished ? '#077ffc' : '#3dc2a5' }} /></TouchableOpacity>
@@ -45,6 +75,8 @@ const TodoItem = (props): React.JSX.Element => {
 const TodoItemsComponent = (props): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [newTodoItem, setNewTodoItem] = React.useState('');
+    const [date, setDate] = React.useState(new Date());
+    const [time, setTime] = React.useState(new Date());
 
     const dispatch = useDispatch();
     React.useEffect(() => {
@@ -60,6 +92,8 @@ const TodoItemsComponent = (props): React.JSX.Element => {
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     const handleTextChange = (task) => setNewTodoItem(task);
+    const handleDateChange = (date) => setDate(date);
+    const handleTimeChange = (time) => setTime(time);
 
     const addNewItem = () => {
         if (newTodoItem === '') {
@@ -72,7 +106,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             closeModal();
             return;
         }
-        let newTodo = { category_id: categoryId, task: newTodoItem, finished: false };
+        let newTodo = { category_id: categoryId, task: newTodoItem, date: date, time: time, finished: false };
         setNewTodoItem('');
         dispatch(getAddTodoRequest(newTodo));
         dispatch(getIncrementRequest(categoryId));
@@ -106,7 +140,7 @@ const TodoItemsComponent = (props): React.JSX.Element => {
             }
             <VerticalSpacer amount={15} />
             <TouchableOpacity style={styles.addButtonTouch} onPress={openModal}><View style={styles.addButton}><Text style={{ fontSize: 40, color: '#fff', marginTop: -7 }}>+</Text></View></TouchableOpacity>
-            <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
+            <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} addItem={addNewItem} modalVisible={modalVisible} />
         </View>
     );
 };
@@ -154,7 +188,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     todoItemDetail: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
     },
     todoItemBullet: {

@@ -184,7 +184,12 @@ function* fetchCategoryAsync() {
 
 function* fetchTodoAsync() {
     const result = yield call(() => fetchCollection('todos'));
-    yield put({ type: 'todos/initTodos', payload: result.success ? result.payload : [] });
+    const todosWithSerializableTimeAndDate = result.payload.map(todo => ({
+        ...todo,
+        time: todo.time ? todo.time.toDate().toISOString() : null,
+        date: todo.date ? todo.date.toDate().toISOString() : null,
+    }));
+    yield put({ type: 'todos/initTodos', payload: result.success ? todosWithSerializableTimeAndDate : [] });
 }
 
 function* addCategoryAsync(action) {

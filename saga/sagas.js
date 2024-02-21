@@ -184,12 +184,7 @@ function* fetchCategoryAsync() {
 
 function* fetchTodoAsync() {
     const result = yield call(() => fetchCollection('todos'));
-    const todosWithSerializableTimeAndDate = result.payload.map(todo => ({
-        ...todo,
-        time: todo.time ? todo.time.toDate().toISOString() : null,
-        date: todo.date ? todo.date.toDate().toISOString() : null,
-    }));
-    yield put({ type: 'todos/initTodos', payload: result.success ? todosWithSerializableTimeAndDate : [] });
+    yield put({ type: 'todos/initTodos', payload: result.success ? result.payload : [] });
 }
 
 function* addCategoryAsync(action) {
@@ -225,6 +220,8 @@ function* removeTodoAsync(action) {
 
 function* addTodoAsync(action) {
     const todo = action.payload;
+    todo.date = todo.date ? todo.date.toISOString() : null;
+    todo.time = todo.time ? todo.time.toISOString() : null;
     const result = yield call(() => storeData('todos', todo));
     yield put({ type: 'todos/addTodo', payload: { success: result.success, todo: result.success ? { ...todo, id: result.id } : null } });
 }

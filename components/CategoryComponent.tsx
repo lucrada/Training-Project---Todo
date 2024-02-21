@@ -10,12 +10,16 @@ import { selectCategory } from '../reducers/categorySlice';
 const CategoryItem = (props): React.JSX.Element => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [newTodoItem, setNewTodoItem] = React.useState('');
+    const [date, setDate] = React.useState(new Date());
+    const [time, setTime] = React.useState(new Date());
 
     const dispatch = useDispatch();
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     const handleTextChange = (task) => setNewTodoItem(task);
+    const handleDateChange = (date) => setDate(date);
+    const handleTimeChange = (time) => setTime(time);
 
     const addNewItem = () => {
         if (newTodoItem === '') {
@@ -23,7 +27,7 @@ const CategoryItem = (props): React.JSX.Element => {
             closeModal();
             return;
         }
-        let newTodo = { category_id: props.id, task: newTodoItem, finished: false };
+        let newTodo = { category_id: props.id, task: newTodoItem, date: date, time: time, finished: false };
         dispatch(getAddTodoRequest(newTodo));
         dispatch(selectCategory(newTodo.category_id));
         dispatch(getIncrementRequest(newTodo.category_id));
@@ -44,7 +48,7 @@ const CategoryItem = (props): React.JSX.Element => {
                     <TouchableOpacity onPress={openModal} style={{ width: 30 }}><Text style={{ fontSize: 40, fontWeight: 'bold', width: 30 }}>+</Text></TouchableOpacity>
                 </View>
             </TouchableOpacity>
-            <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} addItem={addNewItem} modalVisible={modalVisible} />
+            <AddTodoModal closeModal={closeModal} handleTextChange={handleTextChange} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} addItem={addNewItem} modalVisible={modalVisible} />
         </View>
     );
 };

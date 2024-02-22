@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { createSlice } from '@reduxjs/toolkit';
+import onCreateTriggerNotification from '../NotificationHandler';
 
 const initialState = {
     todos: [],
@@ -23,6 +24,10 @@ const todoSlice = createSlice({
         addTodo: (state, action) => {
             if (action.payload.success) {
                 state.todos = [action.payload.todo, ...state.todos];
+                let requiredDate = new Date(action.payload.todo.date);
+                let requiredTime = new Date(action.payload.todo.time);
+                let finalDate = new Date(requiredDate.getFullYear(), requiredDate.getMonth(), requiredDate.getDate(), requiredTime.getHours(), requiredTime.getMinutes(), requiredTime.getSeconds());
+                onCreateTriggerNotification(action.payload.todo.task, finalDate);
             }
         },
         deleteTodo: (state, action) => {

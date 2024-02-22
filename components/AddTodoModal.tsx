@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-gesture-handler';
 import VerticalSpacer from '../utils/VerticalSpacer';
@@ -25,6 +25,7 @@ const AddTodoModal = (props): React.JSX.Element => {
     };
 
     const handleChange = (_, dateTime) => {
+        setPickerVisibility(false);
         if (mode === 'date') {
             var options = {
                 day: 'numeric',
@@ -46,7 +47,6 @@ const AddTodoModal = (props): React.JSX.Element => {
             setTime(formattedTime);
             props.handleTimeChange(dateTime);
         }
-        setPickerVisibility(false);
     };
 
     return (
@@ -66,7 +66,7 @@ const AddTodoModal = (props): React.JSX.Element => {
                         <TouchableOpacity onPress={props.addItem} style={styles.modalButtonAdd}><Text style={styles.modalButtonText}>Add</Text></TouchableOpacity>
                         <TouchableOpacity onPress={props.closeModal} style={styles.modalButtonClose}><Text style={styles.modalButtonText}>Cancel</Text></TouchableOpacity>
                     </View>
-                    {pickerVisibility ? <RNDateTimePicker value={new Date()} mode={mode} onChange={handleChange} minimumDate={new Date()} /> : null}
+                    {pickerVisibility && <RNDateTimePicker value={new Date()} mode={mode} onChange={handleChange} minimumDate={new Date()} />}
                 </SafeAreaView>
             </View>
         </Modal>

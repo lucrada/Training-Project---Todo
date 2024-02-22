@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal, Button } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal, Button, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-gesture-handler';
 import VerticalSpacer from '../utils/VerticalSpacer';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import { isDateGreaterThanToday, isTimeInPast } from '../utils/helperFunctions';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
@@ -55,13 +56,16 @@ const AddTodoModal = (props): React.JSX.Element => {
                 <SafeAreaView style={styles.modalBox}>
                     <Text style={styles.modalText}>Add todo item</Text>
                     <TextInput style={styles.modalTextInput} onChangeText={(text) => props.handleTextChange(text)} placeholder="Enter your task" />
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                         <TouchableOpacity style={styles.dateTimePickerButton} onPress={showDatePicker}><Text style={styles.dateTimePickerButtonText}>Pick date</Text></TouchableOpacity>
                         <TouchableOpacity style={styles.dateTimePickerButton} onPress={showTimePicker}><Text style={styles.dateTimePickerButtonText}>Pick time</Text></TouchableOpacity>
-                        <Text style={{ color: '#000', fontWeight: 'bold' }}>{date}</Text>
-                        <Text style={{ color: '#000', fontWeight: 'bold' }}>{time}</Text>
                     </View>
-                    <VerticalSpacer amount={20} />
+                    <VerticalSpacer amount={10} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ color: '#000', fontWeight: 'bold' }}>Date: {date}</Text>
+                        <Text style={{ color: '#000', fontWeight: 'bold' }}>, Time: {time}</Text>
+                    </View>
+                    <VerticalSpacer amount={10} />
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity onPress={props.addItem} style={styles.modalButtonAdd}><Text style={styles.modalButtonText}>Add</Text></TouchableOpacity>
                         <TouchableOpacity onPress={props.closeModal} style={styles.modalButtonClose}><Text style={styles.modalButtonText}>Cancel</Text></TouchableOpacity>

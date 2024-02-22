@@ -57,11 +57,12 @@ const TodoItem = (props): React.JSX.Element => {
                     <View style={styles.todoItemBullet} />
                     <Text style={{ ...styles.todoItemText, textDecorationLine: props.finished ? 'line-through' : 'none', color: props.finished ? '#888' : '#000' }}>{props.task}</Text>
                 </View>
-                <View>
+                <VerticalSpacer amount={10} />
+                <View style={{ flexDirection: 'row' }}>
                     <VerticalSpacer amount={10} />
-                    {props.date ? <View style={{ backgroundColor: '#040d3a', padding: 5, borderRadius: 10 }}><Text style={{ color: '#fff' }}>{formattedDate}</Text></View> : null}
+                    {props.date ? <View style={{ backgroundColor: '#040d3a', padding: 5, borderRadius: 5, marginRight: 5 }}><Text style={{ color: 'lightgrey' }}>{formattedDate}</Text></View> : null}
                     <VerticalSpacer amount={10} />
-                    {props.time ? <View style={{ backgroundColor: '#040d3a', padding: 5, borderRadius: 10 }}><Text style={{ color: '#fff' }}>{formattedTime}</Text></View> : null}
+                    {props.time ? <View style={{ backgroundColor: '#040d3a', padding: 5, borderRadius: 5 }}><Text style={{ color: 'lightgrey' }}>{formattedTime}</Text></View> : null}
                 </View>
             </View>
             <View style={styles.todoItemActions}>
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     },
     todoItemDetail: {
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     todoItemBullet: {
         marginRight: 10,

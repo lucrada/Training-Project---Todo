@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { createSlice } from '@reduxjs/toolkit';
 import onCreateTriggerNotification, { cancelNotification } from '../NotificationHandler';
-import { getData, saveData } from '../utils/helperFunctions';
 
 const initialState = {
     todos: [],
@@ -20,6 +19,7 @@ const todoSlice = createSlice({
         clearTodosWithCategory: (state, action) => {
             if (!action.payload.success) { return; }
             let catId = action.payload.id;
+            state.todos.forEach(item => item.category_id === catId && cancelNotification(item.id));
             state.todos = state.todos.filter(item => item.category_id !== catId);
         },
         addTodo: (state, action) => {

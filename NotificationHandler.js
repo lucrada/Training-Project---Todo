@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import notifee, { TriggerType } from '@notifee/react-native';
 
-const onCreateTriggerNotification = async (body, triggerDate) => {
+const onCreateTriggerNotification = async (body, triggerDate, id) => {
     const trigger = {
         type: TriggerType.TIMESTAMP,
         timestamp: triggerDate.getTime(),
@@ -15,6 +15,7 @@ const onCreateTriggerNotification = async (body, triggerDate) => {
 
     await notifee.createTriggerNotification(
         {
+            id: id,
             title: 'You have a task to do right now',
             body: body,
             android: {
@@ -24,5 +25,12 @@ const onCreateTriggerNotification = async (body, triggerDate) => {
         trigger,
     );
 };
+
+export async function cancelNotification(id) {
+    try {
+        await notifee.cancelNotification(id);
+    } catch (_) {
+    }
+}
 
 export default onCreateTriggerNotification;

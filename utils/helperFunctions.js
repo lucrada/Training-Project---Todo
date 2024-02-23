@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export const getErrorMessage = (errorCode) => {
     if (errorCode === 'auth/invalid-email') { return 'Email is invalid'; }
     if (errorCode === 'auth/user-not-found') { return 'User does not exists'; }
@@ -64,3 +66,27 @@ export const isDateGreaterThanToday = (givenDate) => {
 
     return false;
 };
+
+export const saveData = async (key, value) => {
+    try {
+        await AsyncStorage.setItem(key, value);
+        console.log('Data saved successfully!');
+    } catch (error) {
+        console.error('Error saving data: ', error);
+    }
+};
+
+export const getData = async (key) => {
+    try {
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+            console.log('Returned value:', value);
+            return value;
+        } else {
+            console.log('Value not found in local storage');
+        }
+    } catch (error) {
+        console.error('Error retrieving data: ', error);
+    }
+};
+

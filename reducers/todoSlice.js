@@ -11,7 +11,7 @@ const todoSlice = createSlice({
     initialState,
     reducers: {
         initTodos: (state, action) => {
-            state.todos = action.payload;
+            state.todos = action.payload.reverse();
         },
         resetTodos: (state) => {
             state.todos = [];
